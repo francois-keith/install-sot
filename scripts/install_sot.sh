@@ -358,20 +358,20 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/jrl jrl-mathtools ${JRL_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-mal ${JRL_URI} master"
+  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-mal ${JRL_URI} topic/eigen-interface"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/laas abstract-robot-dynamics ${LAAS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/laas abstract-robot-dynamics ${LAAS_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-dynamics ${JRL_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-dynamics ${JRL_URI} topic/eigen"
   let "index= $index + 1"
 
   if [ "${PRIVATE_URI}" != "" ]; then
     inst_array[index]="install_pkg $SRC_DIR/robots hrp2-14 ${PRIVATE_URI}"
     let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/robots hrp2-dynamics ${PRIVATE_URI}"
+    inst_array[index]="install_pkg $SRC_DIR/robots hrp2-dynamics ${PRIVATE_URI} topic/eigen"
     let "index= $index + 1"
 
     inst_array[index]="install_pkg $SRC_DIR/robots hrp2-10 ${PRIVATE_URI}"
@@ -381,13 +381,13 @@ create_local_db()
     let "index= $index + 1"
   fi
 
-  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-walkgen ${JRL_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-walkgen ${JRL_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/laas hpp-util ${LAAS_URI}"
@@ -396,34 +396,34 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/laas hpp-template-corba ${LAAS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-core ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-core ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-corba ${LAAS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-corba ${LAAS_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot soth ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} topic/python"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
   let "index= $index + 1"
 
-  inst_array[index]="install_ros_ws_package dynamic_graph_bridge"
+  inst_array[index]="install_ros_ws_package dynamic_graph_bridge topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_ros_ws_package romeo_description"
@@ -441,7 +441,7 @@ create_local_db()
   fi
 
   if [ "${PRIVATE_URI}" != "" ]; then
-    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2 ${STACK_OF_TASKS_URI}"
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2 ${STACK_OF_TASKS_URI} topic/eigen"
     let "index= $index + 1"
   fi
 
