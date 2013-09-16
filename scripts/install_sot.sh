@@ -281,8 +281,11 @@ SOT_ROOT_DIR=$HOME/devel/$ROS_DEVEL_NAME
 SRC_DIR=$SOT_ROOT_DIR/src
 INSTALL_DIR=$SOT_ROOT_DIR/install
 
+
+ELIE_URI=git://github.com/elie-moussy
+
 # Uncomment only if you have an access to those
-# PRIVATE_URI=git@github.com:thomas-moulard
+PRIVATE_URI=git@github.com:elie-moussy
 
 # Uncomment only if you have an account on this server.
 # IDH_PRIVATE_URI=git@idh.lirmm.fr:sot
@@ -307,7 +310,6 @@ else
     LAAS_URI=git@github.com:laas
     STACK_OF_TASKS_URI=git@github.com:stack-of-tasks
 fi
-
 INRIA_URI=https://gforge.inria.fr/git/romeo-sot
 
 # HTTP protocol can also be used:
@@ -377,17 +379,17 @@ create_local_db()
     inst_array[index]="install_pkg $SRC_DIR/robots hrp2-10 ${PRIVATE_URI}"
     let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/robots hrp2-10-optimized ${PRIVATE_URI}"
-    let "index= $index + 1"
+    # inst_array[index]="install_pkg $SRC_DIR/robots hrp2-10-optimized ${PRIVATE_URI}"
+    # let "index= $index + 1"
   fi
 
   inst_array[index]="install_pkg $SRC_DIR/jrl jrl-walkgen ${JRL_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/laas hpp-util ${LAAS_URI}"
@@ -396,28 +398,28 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/laas hpp-template-corba ${LAAS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-core ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-core ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-corba ${LAAS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-corba ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot soth ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} topic/eigen"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
   inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
@@ -441,7 +443,7 @@ create_local_db()
   fi
 
   if [ "${PRIVATE_URI}" != "" ]; then
-    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2 ${STACK_OF_TASKS_URI} topic/eigen"
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2 ${ELIE_URI} topic/eigen"
     let "index= $index + 1"
   fi
 
@@ -454,7 +456,7 @@ create_local_db()
       inst_array[index]="install_ros_ws_package openhrp_bridge_msgs"
       let "index= $index + 1"
 
-      inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2-hrpsys ${STACK_OF_TASKS_URI}"
+      inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2-hrpsys ${ELIE_URI}"
       let "index= $index + 1"
     fi
 
