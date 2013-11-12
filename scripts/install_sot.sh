@@ -332,6 +332,9 @@ create_local_db()
   inst_array[index]="install_ros_ws"
   let "index= $index +1"
 
+  inst_array[index]="install_config"
+  let "index= $index +1"
+
   inst_array[index]="install_pkg $SRC_DIR/robots romeo-sot.git ${INRIA_URI}"
   let "index= $index + 1"
 
@@ -859,9 +862,6 @@ install_ros_ws()
            "   local-name: stacks/hrp4\n    version: "${ROS_VERSION} > /tmp/idh-private.rosinstall
       rosinstall $SOT_ROOT_DIR  /tmp/idh-private.rosinstall
     fi
-
-    # create the config file.
-    install_config
 }
 
 install_ros_ws_package()
