@@ -433,6 +433,12 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
+  inst_array[index]="install_ros_ws_package ros_sot_robot_model"
+  let "index= $index + 1"
+
+  inst_array[index]="install_ros_ws_package sot_pr2"
+  let "index= $index + 1"
+
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
     inst_array[index]="install_ros_ws_package hrp4_description"
     let "index= $index + 1"
@@ -846,7 +852,7 @@ install_ros_ws()
     
     echo "Version to be installed: $ROS_VERSION"
 
-    rosinstall $SOT_ROOT_DIR https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas.rosinstall /opt/ros/$ROS_VERSION
+    rosinstall $SOT_ROOT_DIR https://raw.github.com/francois-keith/ros/$gh_ros_sub_dir/laas.rosinstall /opt/ros/$ROS_VERSION
     if [ "${PRIVATE_URI}" != "" ]; then
       rosinstall $SOT_ROOT_DIR https://raw.github.com/laas/ros/$gh_ros_sub_dir/jrl-umi3218-private.rosinstall
     fi
@@ -910,6 +916,10 @@ install_ros_ws_package()
     fi
 
     if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
+        ${MAKE} install
+    fi
+
+    if [ "$1" == "sot_pr2" ] ; then
         ${MAKE} install
     fi
 }
