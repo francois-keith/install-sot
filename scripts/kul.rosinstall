@@ -1,0 +1,34 @@
+- git:
+    uri: https://francois.keith%40lirmm.fr@git.epfl.ch/repo/cdslearning.git
+    local-name: stacks/cdslearning
+    version: wip
+
+- git: 
+    uri: git@bitbucket.org:francois-keith/expressiongraph.git
+    local-name: stacks/itasc/expressiongraph
+    version: master
+
+- git: 
+    uri: git@bitbucket.org:francois-keith/expressiongraph_lua.git
+    local-name: stacks/itasc/expressiongraph_lua
+    version: master
+
+- git: 
+    uri: git@bitbucket.org:francois-keith/expressiongraph_tf.git
+    local-name: stacks/itasc/expressiongraph_tf
+    version: master
+
+- git: 
+    uri: git@bitbucket.org:haianos/expressiongraph_itasc.git
+    local-name: stacks/itasc/expressiongraph_itasc 
+    version: master
+
+- svn: 
+    uri: https://svn.code.sf.net/p/tum-ros-pkg/code/robot_model/rosie_description
+    local-name: stacks/rosie_description
+
+- git: 
+    uri: https://github.com/ipa320/schunk_modular_robotics
+    local-name: stacks/schunk_modular_robotics
+    version: fuerte
+

@@ -288,6 +288,12 @@ INSTALL_DIR=$SOT_ROOT_DIR/install
 # Uncomment if you have a github account and writing access to the SoT repositories.
 # GITHUB_ACCOUNT="yes"
 
+# Uncomment if you have a writing access to the EPFL repositories.
+#EPFL_PRIVATE_URI=francois.keith%40lirmm.fr@git.epfl.ch
+
+# Uncomment if you have a writing access to the KUL repositories.
+#KUL_PRIVATE_URI=yes
+
 if `test x${ROS_VERSION} == x`; then
     abort "ROS version unknown"
 fi
@@ -470,6 +476,47 @@ create_local_db()
     fi
 
   fi
+
+  # epfl.
+  if [ "${EPFL_PRIVATE_URI}" != "" ]; then
+		inst_array[index]="install_ros_ws_package MathLib"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package GMR"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package CDS"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package sampling_openloop"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package cds_gmm_exec"
+		let "index= $index + 1"
+
+		inst_array[index]="install_pkg $SRC_DIR/../stacks/cdslearning sot-gmr"
+		let "index= $index + 1"
+	fi
+
+  if [ "${KUL_PRIVATE_URI}" != "" ]; then
+		inst_array[index]="install_ros_ws_package rosie_description"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package schunk_description"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package expressiongraph"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package expressiongraph_lua"
+		let "index= $index + 1"
+
+		inst_array[index]="install_ros_ws_package expressiongraph_tf"
+		let "index= $index + 1"
+
+		inst_array[index]="install_pkg $SRC_DIR/sot sot-expression-graph git@github.com:apertuscus"
+		let "index= $index + 1"
+	fi
 
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
   do
@@ -867,6 +914,16 @@ install_ros_ws()
       echo -e "- git:\n    uri: git@idh.lirmm.fr:mcp/ros/hrp4/hrp4_urdf.git\n" \
            "   local-name: stacks/hrp4\n    version: "${ROS_VERSION} > /tmp/idh-private.rosinstall
       rosinstall $SOT_ROOT_DIR  /tmp/idh-private.rosinstall
+    fi
+
+    if [ "${EPFL_PRIVATE_URI}" != "" ]; then
+      echo -e "- git:\n    uri: https://${EPFL_PRIVATE_URI}/repo/cdslearning.git\n"\
+              "   local-name: stacks/cdslearning\n    version: wip"> /tmp/epfl-private.rosinstall
+      rosinstall $SOT_ROOT_DIR  /tmp/epfl-private.rosinstall
+    fi
+
+    if [ "${KUL_PRIVATE_URI}" != "" ]; then
+      rosinstall $SOT_ROOT_DIR  ./kul.rosinstall
     fi
 }
 
