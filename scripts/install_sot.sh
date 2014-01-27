@@ -292,7 +292,7 @@ INSTALL_DIR=$SOT_ROOT_DIR/install
 #EPFL_PRIVATE_URI=francois.keith%40lirmm.fr@git.epfl.ch
 
 # Uncomment if you have a writing access to the KUL repositories.
-#KUL_PRIVATE_URI=yes
+KUL_PRIVATE_URI=yes
 
 if `test x${ROS_VERSION} == x`; then
     abort "ROS version unknown"
@@ -526,6 +526,10 @@ create_local_db()
 
 		inst_array[index]="install_pkg $SRC_DIR/sot sot-expression-graph git@github.com:apertuscus"
 		let "index= $index + 1"
+
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow ${IDH_PRIVATE_URI}"
+    let "index= $index + 1"
+
 	fi
 
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
@@ -982,7 +986,7 @@ install_ros_ws_package()
     
     # for groovy
     if [ "$ROS_VERSION" == "groovy" ]; then
-        if [ "$1" == "urdf_parser_py" ] || [ "$1" == "robot_capsule_urdf" ] || [ "$1" == "xml_reflection" ]; then
+        if [ "$1" == "urdf_parser_py" ] || [ "$1" == "robot_capsule_urdf" ] || [ "$1" == "xml_reflection" ] || [ "$1" == "jrl_dynamics_urdf" ]; then
             ${MAKE} install
         fi
     fi
@@ -995,7 +999,7 @@ install_ros_ws_package()
     fi
 
     # for all distribution
-    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
+    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] || [ "$1" == "sot_pr2" ] ; then
         ${MAKE} install
     fi
 }

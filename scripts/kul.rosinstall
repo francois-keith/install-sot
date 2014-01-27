@@ -1,25 +1,20 @@
-- git:
-    uri: https://francois.keith%40lirmm.fr@git.epfl.ch/repo/cdslearning.git
-    local-name: stacks/cdslearning
-    version: wip
-
 - git: 
-    uri: git@bitbucket.org:francois-keith/expressiongraph.git
+    uri: git@idh.lirmm.fr:sot/expressiongraph.git
     local-name: stacks/itasc/expressiongraph
     version: master
 
 - git: 
-    uri: git@bitbucket.org:francois-keith/expressiongraph_lua.git
+    uri: git@idh.lirmm.fr:sot/expressiongraph_lua.git
     local-name: stacks/itasc/expressiongraph_lua
     version: master
 
 - git: 
-    uri: git@bitbucket.org:francois-keith/expressiongraph_tf.git
+    uri: git@idh.lirmm.fr:sot/expressiongraph_tf.git
     local-name: stacks/itasc/expressiongraph_tf
     version: master
 
 - git: 
-    uri: git@bitbucket.org:haianos/expressiongraph_itasc.git
+    uri: git@idh.lirmm.fr:sot/expressiongraph_itasc.git
     local-name: stacks/itasc/expressiongraph_itasc 
     version: master
 
