@@ -374,7 +374,7 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/laas abstract-robot-dynamics ${LAAS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-dynamics ${JRL_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-dynamics git://github.com/francois-keith"
   let "index= $index + 1"
 
   if [ "${PRIVATE_URI}" != "" ]; then
