@@ -448,6 +448,9 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
+  inst_array[index]="install_ros_ws_package sot_pr2"
+  let "index= $index + 1"
+
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
     inst_array[index]="install_ros_ws_package hrp4_description"
     let "index= $index + 1"
@@ -939,6 +942,10 @@ install_ros_ws_package()
 
     # for all distribution
     if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
+        ${MAKE} install
+    fi
+
+    if [ "$1" == "sot_pr2" ] ; then
         ${MAKE} install
     fi
 }
