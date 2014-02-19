@@ -421,7 +421,7 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI} f7271a3f2 "
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot soth ${STACK_OF_TASKS_URI}"
@@ -430,15 +430,15 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI} 038e2ccd38be9299"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} topic/python"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} master"
   let "index= $index + 1"
 
   # In groovy and hydro, use the standalone version of jrl_dynamics_urdf
   if [ "$ROS_VERSION" == "groovy" ] || [ "$ROS_VERSION" == "hydro" ]; then
-    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf ${LAAS_URI}"
+    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf git://github.com/francois-keith "
     let "index= $index + 1"
   else
     inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
@@ -448,10 +448,16 @@ create_local_db()
   inst_array[index]="install_ros_ws_package dynamic_graph_bridge"
   let "index= $index + 1"
 
+  inst_array[index]="install_ros_ws_package dynamic_graph_actionlib"
+  let "index= $index + 1"
+
   inst_array[index]="install_ros_ws_package romeo_description"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git ${STACK_OF_TASKS_URI}"
+  let "index= $index + 1"
+
+  inst_array[index]="install_ros_ws_package sot_pr2"
   let "index= $index + 1"
 
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
@@ -512,8 +518,8 @@ create_local_db()
 		inst_array[index]="install_ros_ws_package rosie_description"
 		let "index= $index + 1"
 
-		inst_array[index]="install_ros_ws_package schunk_description"
-		let "index= $index + 1"
+#		inst_array[index]="install_ros_ws_package schunk_description"
+#		let "index= $index + 1"
 
 		inst_array[index]="install_ros_ws_package expressiongraph"
 		let "index= $index + 1"
@@ -526,11 +532,19 @@ create_local_db()
 
 		inst_array[index]="install_pkg $SRC_DIR/sot sot-expression-graph git@github.com:apertuscus"
 		let "index= $index + 1"
-
-    inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow ${IDH_PRIVATE_URI}"
-    let "index= $index + 1"
-
 	fi
+
+  inst_array[index]="install_ros_ws_package  robohow_common_msgs"
+  let "index= $index + 1"
+
+  inst_array[index]="install_ros_ws_package robohow_sot"
+  let "index= $index + 1"
+
+	inst_array[index]="install_ros_ws_package sot_sandbox"
+	let "index= $index + 1"
+
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow-demo git://github.com/francois-keith"
+  let "index= $index + 1"
 
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
   do
@@ -727,7 +741,7 @@ update_pkg()
           ${GIT} checkout $4
           ${GIT} pull
        else
-          ${GIT} checkout -b $4 origin/$4
+          ${GIT} checkout $4
        fi
     else
       ${GIT} pull
@@ -911,7 +925,7 @@ install_ros_ws()
     
     echo "Version to be installed: $ROS_VERSION"
 
-    rosinstall $SOT_ROOT_DIR https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas.rosinstall /opt/ros/$ROS_VERSION
+    rosinstall $SOT_ROOT_DIR https://raw.github.com/francois-keith/ros/$gh_ros_sub_dir/laas.rosinstall /opt/ros/$ROS_VERSION
     if [ "${PRIVATE_URI}" != "" ]; then
       rosinstall $SOT_ROOT_DIR https://raw.github.com/laas/ros/$gh_ros_sub_dir/jrl-umi3218-private.rosinstall
     fi
