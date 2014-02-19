@@ -1,20 +1,20 @@
 - git: 
-    uri: git@idh.lirmm.fr:sot/expressiongraph.git
+    uri: git@bitbucket.org:eaertbel/expressiongraph
     local-name: stacks/itasc/expressiongraph
     version: master
 
 - git: 
-    uri: git@idh.lirmm.fr:sot/expressiongraph_lua.git
+    uri: git@bitbucket.org:eaertbel/expressiongraph_lua
     local-name: stacks/itasc/expressiongraph_lua
     version: master
 
 - git: 
-    uri: git@idh.lirmm.fr:sot/expressiongraph_tf.git
+    uri: git@bitbucket.org:eaertbel/expressiongraph_tf
     local-name: stacks/itasc/expressiongraph_tf
     version: master
 
 - git: 
-    uri: git@idh.lirmm.fr:sot/expressiongraph_itasc.git
+    uri: git@bitbucket.org:haianos/expressiongraph_itasc
     local-name: stacks/itasc/expressiongraph_itasc 
     version: master
 
