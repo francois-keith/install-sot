@@ -1018,7 +1018,7 @@ install_ros_ws_package()
     
     # for groovy
     if [ "$ROS_VERSION" == "groovy" ]; then
-        if [ "$1" == "urdf_parser_py" ] || [ "$1" == "robot_capsule_urdf" ] || [ "$1" == "xml_reflection" ] || [ "$1" == "jrl_dynamics_urdf" ]; then
+        if [ "$1" == "urdf_parser_py" ] || [ "$1" == "robot_capsule_urdf" ] || [ "$1" == "xml_reflection" ]  || [ "$1" == "sot_pr2" ]; then
             ${MAKE} install
         fi
     fi
@@ -1031,7 +1031,7 @@ install_ros_ws_package()
     fi
 
     # for all distribution
-    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] || [ "$1" == "sot_pr2" ] ; then
+    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
         ${MAKE} install
     fi
 }
