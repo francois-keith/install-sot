@@ -27,3 +27,18 @@
     local-name: stacks/schunk_modular_robotics
     version: fuerte
 
+- git: 
+    uri: https://github.com/RoboHow/robohow_common_msgs
+    local-name: stacks/robohow_common_msgs
+    version: master
+
+- git:
+    uri: https://github.com/francois-keith/robohow_sot
+    local-name: stacks/robohow_sot
+    version: master
+
+- git:
+    uri: https://github.com/francois-keith/sot_sandbox
+    local-name: stacks/sot_sandbox  
+    version: master
+
