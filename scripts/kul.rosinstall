@@ -28,7 +28,7 @@
     version: fuerte
 
 - git: 
-    uri: https://github.com/RoboHow/robohow_common_msgs
+    uri: https://github.com/francois-keith/robohow_common_msgs
     local-name: stacks/robohow_common_msgs
     version: master
 
