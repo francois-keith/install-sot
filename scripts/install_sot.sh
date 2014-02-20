@@ -427,7 +427,7 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot soth ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv git://github.com/francois-keith "
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI} 038e2ccd38be9299"
