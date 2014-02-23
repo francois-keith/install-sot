@@ -438,7 +438,7 @@ create_local_db()
 
   # In groovy and hydro, use the standalone version of jrl_dynamics_urdf
   if [ "$ROS_VERSION" == "groovy" ] || [ "$ROS_VERSION" == "hydro" ]; then
-    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf git://github.com/francois-keith "
+    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf git://github.com/francois-keith topic/fixed_joints"
     let "index= $index + 1"
   else
     inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
@@ -539,6 +539,12 @@ create_local_db()
 
   inst_array[index]="install_ros_ws_package robohow_sot"
   let "index= $index + 1"
+
+	inst_array[index]="install_ros_ws_package pr2_sot_integration"
+	let "index= $index + 1"
+
+	inst_array[index]="install_ros_ws_package ctrl_interface"
+	let "index= $index + 1"
 
 	inst_array[index]="install_ros_ws_package sot_sandbox"
 	let "index= $index + 1"

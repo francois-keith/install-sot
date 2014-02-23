@@ -42,3 +42,8 @@
     local-name: stacks/sot_sandbox  
     version: master
 
+- git:
+   uri: git@github.com:RoboHow/pr2_sot_integration
+   local-name: stacks/pr2_sot_integration
+   version: master
+
