@@ -445,6 +445,9 @@ create_local_db()
     let "index= $index + 1"
   fi
 
+  inst_array[index]="install_ros_ws_package dynamic_graph_bridge_msgs"
+  let "index= $index + 1"
+
   inst_array[index]="install_ros_ws_package dynamic_graph_bridge"
   let "index= $index + 1"
 
@@ -515,26 +518,14 @@ create_local_db()
 	fi
 
   if [ "${KUL_PRIVATE_URI}" != "" ]; then
-		inst_array[index]="install_ros_ws_package rosie_description"
-		let "index= $index + 1"
-
-#		inst_array[index]="install_ros_ws_package schunk_description"
-#		let "index= $index + 1"
-
 		inst_array[index]="install_ros_ws_package expressiongraph"
 		let "index= $index + 1"
 
-		inst_array[index]="install_ros_ws_package expressiongraph_lua"
-		let "index= $index + 1"
-
-		inst_array[index]="install_ros_ws_package expressiongraph_tf"
-		let "index= $index + 1"
-
-		inst_array[index]="install_pkg $SRC_DIR/sot sot-expression-graph git@github.com:apertuscus"
-		let "index= $index + 1"
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-expression-graph git@github.com:apertuscus"
+    let "index= $index + 1"
 	fi
 
-  inst_array[index]="install_ros_ws_package  robohow_common_msgs"
+  inst_array[index]="install_ros_ws_package robohow_common_msgs"
   let "index= $index + 1"
 
   inst_array[index]="install_ros_ws_package robohow_sot"

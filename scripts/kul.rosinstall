@@ -4,30 +4,6 @@
     version: master
 
 - git: 
-    uri: git@bitbucket.org:eaertbel/expressiongraph_lua
-    local-name: stacks/itasc/expressiongraph_lua
-    version: master
-
-- git: 
-    uri: git@bitbucket.org:eaertbel/expressiongraph_tf
-    local-name: stacks/itasc/expressiongraph_tf
-    version: master
-
-- git: 
-    uri: git@bitbucket.org:haianos/expressiongraph_itasc
-    local-name: stacks/itasc/expressiongraph_itasc 
-    version: master
-
-- svn: 
-    uri: https://svn.code.sf.net/p/tum-ros-pkg/code/robot_model/rosie_description
-    local-name: stacks/rosie_description
-
-- git: 
-    uri: https://github.com/ipa320/schunk_modular_robotics
-    local-name: stacks/schunk_modular_robotics
-    version: fuerte
-
-- git: 
     uri: https://github.com/francois-keith/robohow_common_msgs
     local-name: stacks/robohow_common_msgs
     version: master
