@@ -522,6 +522,21 @@ create_local_db()
 		let "index= $index + 1"
 	fi
 
+	inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@github.com:apertuscus"
+	let "index= $index + 1"
+
+	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-com git@github.com:apertuscus"
+	let "index= $index + 1"
+
+	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-control git@github.com:apertuscus"
+	let "index= $index + 1"
+
+	inst_array[index]="install_pkg $SRC_DIR/sot sot-tcp git@github.com:apertuscus"
+	let "index= $index + 1"
+
+	inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow ${IDH_PRIVATE_URI}"
+	let "index= $index + 1"
+
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
   do
       echo ${inst_array[$lindex]} >> $local_db_file
