@@ -522,16 +522,16 @@ create_local_db()
 		let "index= $index + 1"
 	fi
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@github.com:apertuscus"
+	inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@idh.lirmm.fr:mcp/tcp"
 	let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-com git@github.com:apertuscus"
+	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-com git@idh.lirmm.fr:mcp/tcp"
 	let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-control git@github.com:apertuscus"
+	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-control git@idh.lirmm.fr:mcp/tcp"
 	let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/sot sot-tcp git@github.com:apertuscus"
+	inst_array[index]="install_pkg $SRC_DIR/sot sot-tcp git@idh.lirmm.fr:sot"
 	let "index= $index + 1"
 
 	inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow ${IDH_PRIVATE_URI}"
