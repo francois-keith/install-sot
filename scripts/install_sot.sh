@@ -522,7 +522,7 @@ create_local_db()
 		let "index= $index + 1"
 	fi
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@idh.lirmm.fr:mcp/tcp"
+	inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@idh.lirmm.fr:mcp/grx"
 	let "index= $index + 1"
 
 	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-com git@idh.lirmm.fr:mcp/tcp"
@@ -534,7 +534,11 @@ create_local_db()
 	inst_array[index]="install_pkg $SRC_DIR/sot sot-tcp git@idh.lirmm.fr:sot"
 	let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow ${IDH_PRIVATE_URI}"
+	inst_array[index]="install_pkg $SRC_DIR/sot hrprtc-plugin git@idh.lirmm.fr:mcp/grx"
+	let "index= $index + 1"
+
+
+	inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow-demo ${IDH_PRIVATE_URI}"
 	let "index= $index + 1"
 
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
@@ -596,6 +600,7 @@ mkdir -p                \
     $SRC_DIR/jrl        \
     $SRC_DIR/planning   \
     $SRC_DIR/robots     \
+    $SRC_DIR/tcp        \
     $SRC_DIR/sot
 
 # compare two versions. Taks two arguments: a and b
