@@ -403,7 +403,7 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python git://github.com/francois-keith master_2"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/laas hpp-util ${LAAS_URI}"
