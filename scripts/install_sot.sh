@@ -854,6 +854,8 @@ install_ros_legacy()
 
     ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-desktop-full
     ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-pr2-mechanism      # for realtime_tools
+    ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-pr2-control      # for realtime_tools
+    ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-rosbridge-suite # for sot_sandbox display
 
     if [ "$ROS_VERSION" == "fuerte" ] || [ "$ROS_VERSION" == "electric" ]; then
         ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-robot-model-py      # for parser urdf model in python   
