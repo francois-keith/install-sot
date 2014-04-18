@@ -277,7 +277,7 @@ shift $(($OPTIND-1))
 
 
 ROS_DEVEL_NAME=$1
-SOT_ROOT_DIR=$HOME/devel/$ROS_DEVEL_NAME
+SOT_ROOT_DIR=/home/aclodic/DAFF/25_SotGepetto_git/devel/$ROS_DEVEL_NAME
 SRC_DIR=$SOT_ROOT_DIR/src
 INSTALL_DIR=$SOT_ROOT_DIR/install
 
@@ -291,7 +291,7 @@ INSTALL_DIR=$SOT_ROOT_DIR/install
 # TRAC_LAAS_URI=trac.laas.fr
 
 # Uncomment if you have a github account and writing access to the SoT repositories.
-# GITHUB_ACCOUNT="yes"
+GITHUB_ACCOUNT="yes"
 
 if `test x${ROS_VERSION} == x`; then
     abort "ROS version unknown"
@@ -314,8 +314,8 @@ fi
 INRIA_URI=https://gforge.inria.fr/git/romeo-sot
 
 # HTTP protocol can also be used:
-#JRL_URI=https://${LAAS_USER_ACCOUNT}@github.com/jrl-umi3218
-#LAAS_URI=https://${LAAS_USER_ACCOUNT}@github.com/laas
+JRL_URI=https://${LAAS_USER_ACCOUNT}@github.com/jrl-umi3218
+LAAS_URI=https://${LAAS_USER_ACCOUNT}@github.com/laas
 
 
 create_local_db()
@@ -417,7 +417,7 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} topic/python"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator git://github.com/aclodic"
   let "index= $index + 1"
 
   inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
@@ -429,7 +429,7 @@ create_local_db()
   inst_array[index]="install_ros_ws_package romeo_description"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git git://github.com/francois-keith"
   let "index= $index + 1"
 
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
