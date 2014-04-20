@@ -391,8 +391,17 @@ create_local_db()
     let "index= $index + 1"
   fi
 
-  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-walkgen ${JRL_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/jrl jrl-walkgen git://github.com/francois-keith"
   let "index= $index + 1"
+
+  # In groovy and hydro, use the standalone version of jrl_dynamics_urdf
+  if [ "$ROS_VERSION" == "groovy" ] || [ "$ROS_VERSION" == "hydro" ]; then
+    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf git://github.com/francois-keith"
+    let "index= $index + 1"
+  else
+    inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
+    let "index= $index + 1"
+  fi
 
   inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
@@ -427,17 +436,8 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator git://github.com/aclodic"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator git://github.com/francois-keith topic/urdf"
   let "index= $index + 1"
-
-  # In groovy and hydro, use the standalone version of jrl_dynamics_urdf
-  if [ "$ROS_VERSION" == "groovy" ] || [ "$ROS_VERSION" == "hydro" ]; then
-    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf ${LAAS_URI}"
-    let "index= $index + 1"
-  else
-    inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
-    let "index= $index + 1"
-  fi
 
   inst_array[index]="install_ros_ws_package dynamic_graph_bridge_msgs"
   let "index= $index + 1"
@@ -448,7 +448,7 @@ create_local_db()
   inst_array[index]="install_ros_ws_package romeo_description"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git git://github.com/francois-keith"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git git://github.com/francois-keith urdf_parsing"
   let "index= $index + 1"
 
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
