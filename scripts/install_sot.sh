@@ -292,7 +292,9 @@ INSTALL_DIR=$SOT_ROOT_DIR/install
 #EPFL_PRIVATE_URI=francois.keith%40lirmm.fr@git.epfl.ch
 
 # Uncomment if you have a writing access to the KUL repositories.
-KUL_PRIVATE_URI=yes
+#KUL_PRIVATE_URI=yes
+
+#GERGONDET_PRIVATE_URI=yes
 
 if `test x${ROS_VERSION} == x`; then
     abort "ROS version unknown"
@@ -476,9 +478,8 @@ create_local_db()
     let "index= $index + 1"
   fi
 
-  if [ "${PRIVATE_URI}" != "" ] || [ "${IDH_PRIVATE_URI}" != "" ]; then
+  if [ "${PRIVATE_URI}" != "" ]; then
     if ! [ "$GRX_3_0_FOUND" == "" ]; then
-
       inst_array[index]="install_ros_ws_package openhrp_bridge"
       let "index= $index + 1"
 
@@ -488,12 +489,13 @@ create_local_db()
       inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp2-hrpsys ${STACK_OF_TASKS_URI}"
       let "index= $index + 1"
     fi
+  fi
 
+  if [ "${PRIVATE_URI}" != "" ] || [ "${IDH_PRIVATE_URI}" != "" ]; then
     if ! [ "$GRX_3_1_FOUND" == "" ]; then
       inst_array[index]="install_pkg $SRC_DIR/sot sot-hrprtc-hrp2 ${STACK_OF_TASKS_URI}"
       let "index= $index + 1"
     fi
-
   fi
 
   # epfl.
@@ -523,44 +525,95 @@ create_local_db()
 
     inst_array[index]="install_pkg $SRC_DIR/sot sot-expression-graph git@github.com:apertuscus"
     let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package robohow_common_msgs"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package robohow_sot"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package pr2_sot_integration"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package ctrl_interface"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package sot_sandbox"
+    let "index= $index + 1"
+
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow-demo git://github.com/francois-keith"
+    let "index= $index + 1"
 	fi
 
-  inst_array[index]="install_ros_ws_package robohow_common_msgs"
-  let "index= $index + 1"
 
-  inst_array[index]="install_ros_ws_package robohow_sot"
-  let "index= $index + 1"
+  if [ "${IDH_PRIVATE_URI}" != "" ]; then
+	  inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@idh.lirmm.fr:mcp/grx"
+	  let "index= $index + 1"
 
-	inst_array[index]="install_ros_ws_package pr2_sot_integration"
-	let "index= $index + 1"
+	  inst_array[index]="install_pkg $SRC_DIR/tcp tcp-com git@idh.lirmm.fr:mcp/tcp"
+	  let "index= $index + 1"
 
-	inst_array[index]="install_ros_ws_package ctrl_interface"
-	let "index= $index + 1"
+	  inst_array[index]="install_pkg $SRC_DIR/tcp tcp-control git@idh.lirmm.fr:mcp/tcp"
+	  let "index= $index + 1"
 
-	inst_array[index]="install_ros_ws_package sot_sandbox"
-	let "index= $index + 1"
+	  inst_array[index]="install_pkg $SRC_DIR/sot sot-tcp git@idh.lirmm.fr:sot"
+	  let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow-demo git://github.com/francois-keith"
-  let "index= $index + 1"
+	  inst_array[index]="install_pkg $SRC_DIR/sot hrprtc-plugin git@idh.lirmm.fr:mcp/grx"
+	  let "index= $index + 1"
+  fi
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp controller-abstract-interface git@idh.lirmm.fr:mcp/grx"
-	let "index= $index + 1"
+  if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-trajectory git+ssh://pbs@dinauz.org/home/pbs/git/"
+    let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-com git@idh.lirmm.fr:mcp/tcp"
-	let "index= $index + 1"
+    inst_array[index]="install_pkg $SRC_DIR/bci OculusSDK https://github.com/jherico/"
+    let "index= $index + 1"
+    
+    inst_array[index]="install_pkg $SRC_DIR/bci sfml-oculus https://github.com/gergondet/"
+    let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/tcp tcp-control git@idh.lirmm.fr:mcp/tcp"
-	let "index= $index + 1"
+    inst_array[index]="install_pkg $SRC_DIR/bci bci-interface https://github.com/gergondet/"
+    let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/sot sot-tcp git@idh.lirmm.fr:sot"
-	let "index= $index + 1"
+    inst_array[index]="install_pkg $SRC_DIR/bci configparser https://github.com/LIRMM-Beziers/"
+    let "index= $index + 1"
 
-	inst_array[index]="install_pkg $SRC_DIR/sot hrprtc-plugin git@idh.lirmm.fr:mcp/grx"
-	let "index= $index + 1"
+    inst_array[index]="install_pkg $SRC_DIR/bci coshell-client git+ssh://pbs@dinauz.org/home/pbs/git/"
+    let "index= $index + 1"
+
+    inst_array[index]="install_pkg $SRC_DIR/bci coshell-utils git+ssh://pbs@dinauz.org/home/pbs/git/"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package bciinterface_rosreceiver_msgs"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package bciinterface_rosreceiver"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package bciinterface_rosbackground"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package perception_blort"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package depth_query"
+    let "index= $index + 1"
 
 
-	inst_array[index]="install_pkg $SRC_DIR/sot sot-robohow-demo ${IDH_PRIVATE_URI}"
-	let "index= $index + 1"
+    inst_array[index]="install_pkg $SRC_DIR/bci libvision https://github.com/LIRMM-Beziers"
+    let "index= $index + 1"
+
+    inst_array[index]="install_pkg $SRC_DIR/bci visionsystem https://github.com/LIRMM-Beziers"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package blort_bciinterface"
+    let "index= $index + 1"
+
+
+    inst_array[index]="install_pkg $SRC_DIR/bci pick-and-place git+ssh://pbs@dinauz.org/home/pbs/git/bci-applications"
+    let "index= $index + 1"
+	fi
 
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
   do
@@ -622,7 +675,8 @@ mkdir -p                \
     $SRC_DIR/planning   \
     $SRC_DIR/robots     \
     $SRC_DIR/tcp        \
-    $SRC_DIR/sot
+    $SRC_DIR/sot        \
+    $SRC_DIR/bci
 
 # compare two versions. Taks two arguments: a and b
 # return -1 if a<b, 0 if a=b, 1 if a>b
@@ -660,6 +714,7 @@ install_apt_dependencies()
 	libeigen3-dev \
 	liblapack-dev libblas-dev gfortran \
 	python-dev python-sphinx python-numpy \
+	libbullet-dev libglm-dev \
 	omniidl omniidl-python libomniorb4-dev
 }
 
@@ -814,7 +869,9 @@ compile_pkg()
 
     # Build the repository
     ${MAKE} ${MAKE_OPTS}
-    ${MAKE} install ${MAKE_OPTS}
+    if [ "$2" != "OculusSDK" ]; then
+      ${MAKE} install ${MAKE_OPTS}
+    fi
 }
 
 install_pkg()
@@ -976,7 +1033,7 @@ install_ros_ws()
 
     if [ "${IDH_PRIVATE_URI}" != "" ]; then
       echo -e "- git:\n    uri: git@idh.lirmm.fr:mcp/ros/hrp4/hrp4_urdf.git\n" \
-           "   local-name: stacks/hrp4\n    version: "${ROS_VERSION} > /tmp/idh-private.rosinstall
+           "   local-name: stacks/hrp4\n    version: master" > /tmp/idh-private.rosinstall
       cat  /tmp/idh-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
@@ -990,6 +1047,20 @@ install_ros_ws()
       cat  ./kul.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
+    if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
+      echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosreceiver_msgs\n"\
+              "   local-name: stacks/bciinterface_rosreceiver_msgs" >> /tmp/sot_$ROS_VERSION.rosinstall
+      echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosreceiver\n"\
+              "   local-name: stacks/bciinterface_rosreceiver" >> /tmp/sot_$ROS_VERSION.rosinstall
+      echo -e "- git:\n    uri: https://github.com/gergondet/perception_blort\n"\
+              "   local-name: stacks/perception_blort" >> /tmp/sot_$ROS_VERSION.rosinstall
+      echo -e "- git:\n    uri: https://github.com/gergondet/blort_bciinterface\n"\
+              "   local-name: stacks/blort_bciinterface" >> /tmp/sot_$ROS_VERSION.rosinstall
+      echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosbackground\n"\
+              "   local-name: stacks/bciinterface_rosbackground" >> /tmp/sot_$ROS_VERSION.rosinstall
+      echo -e "- git:\n    uri: https://github.com/gergondet/depth_query\n"\
+              "   local-name: stacks/depth_query" >> /tmp/sot_$ROS_VERSION.rosinstall
+    fi
     rosinstall $SOT_ROOT_DIR /tmp/sot_$ROS_VERSION.rosinstall /opt/ros/$ROS_VERSION
 }
 
@@ -1055,7 +1126,9 @@ install_ros_ws_package()
     fi
 
     # for all distribution
-    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
+    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] \
+    || [ "$1" == "bciinterface_rosreceiver" ] || [ "$1" == "bciinterface_rosbackground" ] \
+    || [ "$1" == "blort_bciinterface" ]; then
         ${MAKE} install
     fi
 }
