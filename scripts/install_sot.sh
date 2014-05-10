@@ -579,10 +579,10 @@ create_local_db()
     inst_array[index]="install_pkg $SRC_DIR/bci configparser https://github.com/LIRMM-Beziers/"
     let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/bci coshell-client git+ssh://pbs@dinauz.org/home/pbs/git/"
+    inst_array[index]="install_pkg $SRC_DIR/bci coshell-client git+ssh://pbs@dinauz.org/home/pbs/git/ cmakemodules"
     let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/bci coshell-utils git+ssh://pbs@dinauz.org/home/pbs/git/"
+    inst_array[index]="install_pkg $SRC_DIR/bci coshell-utils git+ssh://pbs@dinauz.org/home/pbs/git/  cmakemodules"
     let "index= $index + 1"
 
     inst_array[index]="install_ros_ws_package bciinterface_rosreceiver_msgs"
