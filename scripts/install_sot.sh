@@ -715,7 +715,8 @@ install_apt_dependencies()
 	liblapack-dev libblas-dev gfortran \
 	python-dev python-sphinx python-numpy \
 	libbullet-dev libglm-dev \
-	omniidl omniidl-python libomniorb4-dev
+	omniidl omniidl-python libomniorb4-dev\
+	libjpeg62 libavcodec-dev libswscale-dev libx264-dev libmagick++-dev
 }
 
 install_git()
