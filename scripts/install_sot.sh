@@ -339,11 +339,6 @@ create_local_db()
   inst_array[index]="install_doxygen"
   let "index= $index +1"
 
-  if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
-    inst_array[index]="install_sfml"
-    let "index= $index +1"
-  fi
-
   inst_array[index]="install_ros_legacy"
   let "index= $index +1"
 
@@ -352,6 +347,11 @@ create_local_db()
 
   inst_array[index]="install_config"
   let "index= $index +1"
+
+  if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
+    inst_array[index]="install_sfml"
+    let "index= $index +1"
+  fi
 
   inst_array[index]="install_pkg $SRC_DIR/robots romeo-sot.git ${INRIA_URI}"
   let "index= $index + 1"
@@ -800,11 +800,15 @@ install_doxygen()
 
 install_sfml()
 {
-  if ! [ -e ${INSTALL}/lib/pkgconfig/sfml-system.pc ]
+  if [ $UPDATE_PACKAGE -eq 0 ]; then
+      return
+  fi
+
+  if ! [ -e ${INSTALL_DIR}/lib/pkgconfig/sfml-system.pc ]; then
     cd /tmp
     wget http://www.sfml-dev.org/download/sfml/2.1/SFML-2.1-linux-gcc-64bits.tar.bz2
     tar -xvjf SFML-2.1-linux-gcc-64bits.tar.bz2
-    cp -r SFML-2.1/* ${INSTALL}
+    cp -r SFML-2.1/* ${INSTALL_DIR}
     cd -
   fi
 }
@@ -888,6 +892,13 @@ compile_pkg()
     ${MAKE} ${MAKE_OPTS}
     if [ "$2" != "OculusSDK" ]; then
       ${MAKE} install ${MAKE_OPTS}
+    else
+      cd ..
+      rm -f ./LibOVR/libOculusVR.a
+      ln -s `pwd`/_build-$local_build_type/LibOVR/libOculusVR.a `pwd`/LibOVR/
+
+      rm -f ./3rdParty/EDID/libedid.a
+      ln -s `pwd`/_build-$local_build_type/3rdParty/EDID/libedid.a `pwd`/3rdParty/EDID/
     fi
 }
 
