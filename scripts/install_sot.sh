@@ -339,6 +339,11 @@ create_local_db()
   inst_array[index]="install_doxygen"
   let "index= $index +1"
 
+  if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
+    inst_array[index]="install_sfml"
+    let "index= $index +1"
+  fi
+
   inst_array[index]="install_ros_legacy"
   let "index= $index +1"
 
@@ -791,6 +796,17 @@ install_doxygen()
     echo 'doxygen installation is finished.'
     echo ' Please do not forget to update the value of the variable DOXYGEN'
     echo ' in install_sot.sh'
+}
+
+install_sfml()
+{
+  if ! [ -e ${INSTALL}/lib/pkgconfig/sfml-system.pc ]
+    cd /tmp
+    wget http://www.sfml-dev.org/download/sfml/2.1/SFML-2.1-linux-gcc-64bits.tar.bz2
+    tar -xvjf SFML-2.1-linux-gcc-64bits.tar.bz2
+    cp -r SFML-2.1/* ${INSTALL}
+    cd -
+  fi
 }
 
 update_pkg()
