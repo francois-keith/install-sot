@@ -612,6 +612,15 @@ create_local_db()
     inst_array[index]="install_pkg $SRC_DIR/bci visionsystem https://github.com/LIRMM-Beziers"
     let "index= $index + 1"
 
+    inst_array[index]="install_ros_ws_package blort_ros_msgs"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package siftgpu"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package blort"
+    let "index= $index + 1"
+
     inst_array[index]="install_ros_ws_package blort_bciinterface"
     let "index= $index + 1"
 
@@ -1077,17 +1086,17 @@ install_ros_ws()
 
     if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
       echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosreceiver_msgs\n"\
-              "   local-name: stacks/bciinterface_rosreceiver_msgs" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/bciinterface_rosreceiver_msgs\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosreceiver\n"\
-              "   local-name: stacks/bciinterface_rosreceiver" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/bciinterface_rosreceiver\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/perception_blort\n"\
               "   local-name: stacks/perception_blort" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/blort_bciinterface\n"\
-              "   local-name: stacks/blort_bciinterface" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/blort_bciinterface\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosbackground\n"\
-              "   local-name: stacks/bciinterface_rosbackground" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/bciinterface_rosbackground\n    version: 153d4431d7127" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/depth_query\n"\
-              "   local-name: stacks/depth_query" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/depth_query\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
     rosinstall $SOT_ROOT_DIR /tmp/sot_$ROS_VERSION.rosinstall /opt/ros/$ROS_VERSION
 }
@@ -1156,6 +1165,7 @@ install_ros_ws_package()
     # for all distribution
     if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] \
     || [ "$1" == "bciinterface_rosreceiver" ] || [ "$1" == "bciinterface_rosbackground" ] \
+    || [ "$1" == "depth_query" ] \
     || [ "$1" == "blort_bciinterface" ]; then
         ${MAKE} install
     fi
