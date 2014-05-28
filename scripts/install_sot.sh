@@ -584,10 +584,13 @@ create_local_db()
     inst_array[index]="install_pkg $SRC_DIR/bci configparser https://github.com/LIRMM-Beziers/"
     let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/bci coshell-client git+ssh://pbs@dinauz.org/home/pbs/git/ cmakemodules"
-    let "index= $index + 1"
+#    inst_array[index]="install_pkg $SRC_DIR/bci coshell-client git+ssh://pbs@dinauz.org/home/pbs/git/ cmakemodules"
+#    let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/bci coshell-utils git+ssh://pbs@dinauz.org/home/pbs/git/  cmakemodules"
+#    inst_array[index]="install_pkg $SRC_DIR/bci coshell-utils git+ssh://pbs@dinauz.org/home/pbs/git/  cmakemodules"
+#    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package ros_h264_streamer"
     let "index= $index + 1"
 
     inst_array[index]="install_ros_ws_package bciinterface_rosreceiver_msgs"
@@ -599,33 +602,37 @@ create_local_db()
     inst_array[index]="install_ros_ws_package bciinterface_rosbackground"
     let "index= $index + 1"
 
-    inst_array[index]="install_ros_ws_package perception_blort"
-    let "index= $index + 1"
+#    inst_array[index]="install_ros_ws_package perception_blort"
+#    let "index= $index + 1"
 
     inst_array[index]="install_ros_ws_package depth_query"
     let "index= $index + 1"
 
 
-    inst_array[index]="install_pkg $SRC_DIR/bci libvision https://github.com/LIRMM-Beziers"
-    let "index= $index + 1"
+#    inst_array[index]="install_pkg $SRC_DIR/bci libvision https://github.com/LIRMM-Beziers"
+#    let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/bci visionsystem https://github.com/LIRMM-Beziers"
+#    inst_array[index]="install_pkg $SRC_DIR/bci visionsystem https://github.com/LIRMM-Beziers"
+#    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package siftgpu"
     let "index= $index + 1"
 
     inst_array[index]="install_ros_ws_package blort_ros_msgs"
     let "index= $index + 1"
 
-    inst_array[index]="install_ros_ws_package siftgpu"
+    inst_array[index]="install_ros_ws_package blort"
     let "index= $index + 1"
 
-    inst_array[index]="install_ros_ws_package blort"
+    inst_array[index]="install_ros_ws_package blort_ros"
     let "index= $index + 1"
 
     inst_array[index]="install_ros_ws_package blort_bciinterface"
     let "index= $index + 1"
 
 
-    inst_array[index]="install_pkg $SRC_DIR/bci pick-and-place git+ssh://pbs@dinauz.org/home/pbs/git/bci-applications"
+    inst_array[index]="install_ros_ws_package pick_and_place"
+#    inst_array[index]="install_pkg $SRC_DIR/bci pick-and-place git+ssh://pbs@dinauz.org/home/pbs/git/bci-applications"
     let "index= $index + 1"
 	fi
 
@@ -895,6 +902,17 @@ compile_pkg()
 	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type="${LDFLAGS}" \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
 	-DCXX_DISABLE_WERROR=1 \
+  -Dbciinterface_rosreceiver_msgs_DIR=${INSTALL_DIR}/share/bciinterface_rosreceiver_msgs/cmake/ \
+  -Dbciinterface_rosreceiver_DIR=${INSTALL_DIR}/share/bciinterface_rosreceiver/cmake/ \
+	-Dbciinterface_rosbackground_DIR=${INSTALL_DIR}/share/bciinterface_rosbackground/cmake/ \
+	-Dros_h264_streamer_DIR=${INSTALL_DIR}/share/ros_h264_streamer/cmake/ \
+	-Dblort_ros_msgs_DIR=${INSTALL_DIR}/share/blort_ros_msgs/cmake/ \
+	-Ddynamic_graph_bridge_msgs_DIR=${INSTALL_DIR}/share/dynamic_graph_bridge_msgs/cmake/ \
+	-Dblort_ros_DIR=${INSTALL_DIR}/share/blort_ros/cmake/ \
+	-Dblort_DIR=${INSTALL_DIR}/share/blort/cmake/ \
+	-Dsiftgpu_DIR=${INSTALL_DIR}/share/siftgpu/cmake/ \
+	-Ddepth_query_DIR=${INSTALL_DIR}/share/depth_query/cmake/ \
+	-Dblort_bciinterface_DIR=${INSTALL_DIR}/share/blort_bciinterface/cmake/ \
 	-DCMAKE_CXX_FLAGS="$local_cflags" ..
 
     # Build the repository
@@ -1086,17 +1104,19 @@ install_ros_ws()
 
     if [ "${GERGONDET_PRIVATE_URI}" != "" ]; then
       echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosreceiver_msgs\n"\
-              "   local-name: stacks/bciinterface_rosreceiver_msgs\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/bciinterface_rosreceiver_msgs\n" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosreceiver\n"\
-              "   local-name: stacks/bciinterface_rosreceiver\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/bciinterface_rosreceiver\n" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/perception_blort\n"\
               "   local-name: stacks/perception_blort" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/blort_bciinterface\n"\
-              "   local-name: stacks/blort_bciinterface\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/blort_bciinterface\n" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/bciinterface_rosbackground\n"\
-              "   local-name: stacks/bciinterface_rosbackground\n    version: 153d4431d7127" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/bciinterface_rosbackground\n" >> /tmp/sot_$ROS_VERSION.rosinstall
       echo -e "- git:\n    uri: https://github.com/gergondet/depth_query\n"\
-              "   local-name: stacks/depth_query\n    version: rosbuild" >> /tmp/sot_$ROS_VERSION.rosinstall
+              "   local-name: stacks/depth_query\n" >> /tmp/sot_$ROS_VERSION.rosinstall
+      echo -e "- git:\n    uri: https://github.com/gergondet/ros_h264_streamer\n"\
+              "   local-name: stacks/ros_h264_streamer\n" >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
     rosinstall $SOT_ROOT_DIR /tmp/sot_$ROS_VERSION.rosinstall /opt/ros/$ROS_VERSION
 }
@@ -1145,6 +1165,17 @@ install_ros_ws_package()
 	-DCMAKE_BUILD_TYPE=$local_build_type \
 	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type="${LDFLAGS}" \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
+  -Dbciinterface_rosreceiver_msgs_DIR=${INSTALL_DIR}/share/bciinterface_rosreceiver_msgs/cmake/ \
+  -Dbciinterface_rosreceiver_DIR=${INSTALL_DIR}/share/bciinterface_rosreceiver/cmake/ \
+	-Dbciinterface_rosbackground_DIR=${INSTALL_DIR}/share/bciinterface_rosbackground/cmake/ \
+	-Dros_h264_streamer_DIR=${INSTALL_DIR}/share/ros_h264_streamer/cmake/ \
+	-Dblort_ros_msgs_DIR=${INSTALL_DIR}/share/blort_ros_msgs/cmake/ \
+	-Ddynamic_graph_bridge_msgs_DIR=${INSTALL_DIR}/share/dynamic_graph_bridge_msgs/cmake/ \
+	-Dblort_ros_DIR=${INSTALL_DIR}/share/blort_ros/cmake/ \
+	-Dblort_DIR=${INSTALL_DIR}/share/blort/cmake/ \
+	-Dsiftgpu_DIR=${INSTALL_DIR}/share/siftgpu/cmake/ \
+	-Ddepth_query_DIR=${INSTALL_DIR}/share/depth_query/cmake/ \
+	-Dblort_bciinterface_DIR=${INSTALL_DIR}/share/blort_bciinterface/cmake/ \
 	-DCMAKE_CXX_FLAGS="$local_cflags" ..
     ${MAKE} ${MAKE_OPTS}
     
@@ -1163,9 +1194,14 @@ install_ros_ws_package()
     fi
 
     # for all distribution
-    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] \
-    || [ "$1" == "bciinterface_rosreceiver" ] || [ "$1" == "bciinterface_rosbackground" ] \
+    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "dynamic_graph_bridge_msgs" ] || [ "$1" == "openhrp_bridge" ] \
+    || [ "$1" == "blort_ros" ] || [ "$1" == "blort_ros_msgs" ] || [ "$1" == "blort" ] \
+    || [ "$1" == "bciinterface_rosreceiver" ] || [ "$1" == "bciinterface_rosreceiver_msgs" ] \
+    || [ "$1" == "bciinterface_rosbackground" ] \
     || [ "$1" == "depth_query" ] \
+    || [ "$1" == "siftgpu" ] \
+    || [ "$1" == "pick_and_place" ] \
+    || [ "$1" == "ros_h264_streamer" ] \
     || [ "$1" == "blort_bciinterface" ]; then
         ${MAKE} install
     fi
