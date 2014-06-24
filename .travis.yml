@@ -6,11 +6,15 @@ compiler:
 - gcc
 notifications:
   email:
-  - hpp-source@laas.fr
+  - francois.keith@gmail.com
 branches:
   only:
   - master
+  - topic/eigen
 language: cpp
 matrix:
   allow_failures:
   - compiler: clang
+os:
+  - linux
+  - osx

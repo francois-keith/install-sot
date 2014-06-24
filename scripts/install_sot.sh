@@ -46,11 +46,11 @@ bme=`basename "$0"`
 : ${DOXYGEN=/usr/bin/doxygen}
 : ${SUDO=sudo}
 
+: ${GIT_OPTS=--quiet}
 : ${GIT_CLONE_OPTS=--quiet --recursive}
 : ${MAKE_OPTS=-k}
 
 : ${BUILD_TYPE=RELEASE}
-: ${ROBOT=HRP2LAAS}
 
 # Compilation flags
 : ${CFLAGS="-O3 -pipe -fomit-frame-pointer -ggdb3 -DNDEBUG"}
@@ -155,8 +155,8 @@ Options:
         This also display the internal instructions run by the script.
         To use -l you HAVE TO specify ros_install_path and installation_level.
         With -l the instructions are displayed but not run.
-   -g : OpenHRP 3.0.7 has a priority than OpenHRP 3.1.0. Default is the reverse.
    -m : Compile the sources without updating them
+   -o : print the git log of every package compiled and exit.
    -u : Update the sources without compiling them
    "
 
@@ -184,30 +184,24 @@ For more information, see http://github.com/stack-of-tasks/install-sot
 ## Detect if General Robotix software is present
 detect_grx()
 {
-    GRX_FOUND=""
-    priorityvar1=$1
-    if (( priorityvar1 > 0 )); then
-      if [ -d /opt/grx3.0 ]; then
-        GRX_FOUND="openhrp-3.0.7"
-      fi
-      # OpenHRP 3.1.0 takes over OpenHRP 3.0.7
-      if [ -d /opt/grx ]; then
-        GRX_FOUND="openhrp-3.1.0"
-      fi
-    else
-      if [ -d /opt/grx ]; then
-        GRX_FOUND="openhrp-3.1.0"
-      fi
-      # OpenHRP 3.0.7 takes over OpenHRP 3.1.0
-      if [ -d /opt/grx3.0 ]; then
-        GRX_FOUND="openhrp-3.0.7"
-      fi
+    GRX_3_0_FOUND=""
+    GRX_3_1_FOUND=""
+    if [ -d /opt/grx ]; then
+      GRX_3_1_FOUND="openhrp-3.1.0"
+    fi
+    # OpenHRP 3.0.7 takes over OpenHRP 3.1.0
+    if [ -d /opt/grx3.0 ]; then
+      GRX_3_0_FOUND="openhrp-3.0.7"
     fi
 
-    if [ "${GRX_FOUND}" == "" ]; then
-	warn "OpenHRP not found"
-    else
-	notice "GRX_FOUND is ${GRX_FOUND}"
+    if ! [ "${GRX_3_0_FOUND}" == "" ]; then
+     notice "grx3.0 FOUND"
+    fi
+    if ! [ "${GRX_3_1_FOUND}" == "" ]; then
+     notice "grx3.1 FOUND"
+    fi
+    if [ "${GRX_3_0_FOUND}" == "" ] && [ "${GRX_3_1_FOUND}" == "" ]; then
+     warn "Neither grx3.0 nor grx3.1 could be found"
     fi
 }
 
@@ -228,18 +222,16 @@ test "x$1" = x--debug && shift && set -x
 REMOVE_CMAKECACHE=0     # 1 to rm CMakeCache.txt
 UPDATE_PACKAGE=1        # 1 to run the update the packages, 0 otherwise
 COMPILE_PACKAGE=1       # 1 to compile the packages, 0 otherwise
+LOG_PACKAGE=0           # 1 to bypass the compilation, print the log and return
 
 . /etc/lsb-release
 notice "Distribution is $DISTRIB_CODENAME"
 
-ARG_DETECT_GRX=1
 DISPLAY_LIST_INSTRUCTIONS=0
 
 # Deal with options
-while getopts ":cghlmur:" option; do
+while getopts ":chlmour:" option; do
   case "$option" in
-    g)  ARG_DETECT_GRX=0
-        ;;
     h)  # it's always useful to provide some help
         usage_message
         exit 0
@@ -251,6 +243,10 @@ while getopts ":cghlmur:" option; do
 		;;
 
     m)  COMPILE_PACKAGE=1
+        UPDATE_PACKAGE=0
+        ;;
+    o)  COMPILE_PACKAGE=1
+        LOG_PACKAGE=1
         UPDATE_PACKAGE=0
         ;;
     u)  COMPILE_PACKAGE=0
@@ -285,10 +281,13 @@ INSTALL_DIR=$SOT_ROOT_DIR/install
 ELIE_URI=git://github.com/elie-moussy
 
 # Uncomment only if you have an access to those
-PRIVATE_URI=git@github.com:elie-moussy
+# PRIVATE_URI=git@github.com:elie-moussy
 
 # Uncomment only if you have an account on this server.
 # IDH_PRIVATE_URI=git@idh.lirmm.fr:sot
+
+# Uncomment only if you have an account on this server.
+# TRAC_LAAS_URI=trac.laas.fr
 
 # Uncomment if you have a github account and writing access to the SoT repositories.
 # GITHUB_ACCOUNT="yes"
@@ -341,6 +340,9 @@ create_local_db()
   inst_array[index]="install_ros_ws"
   let "index= $index +1"
 
+  inst_array[index]="install_config"
+  let "index= $index +1"
+
   inst_array[index]="install_pkg $SRC_DIR/robots romeo-sot.git ${INRIA_URI}"
   let "index= $index + 1"
 
@@ -350,12 +352,21 @@ create_local_db()
   fi
 
   if [ "${PRIVATE_URI}" != "" ]; then
-    inst_array[index]="install_ros_ws_package urdf_parser_py"
-      let "index= $index + 1"
+      if [ "$ROS_VERSION" == "groovy" ]; then
+	  inst_array[index]="install_ros_ws_package urdf_parser_py"
+	  let "index= $index + 1"
+	  inst_array[index]="install_ros_ws_package robot_capsule_urdf"
+	  let "index= $index + 1"
+	  inst_array[index]="install_ros_ws_package xml_reflection"
+	  let "index= $index + 1"
+      fi
+      if [ "$ROS_VERSION" == "hydro" ]; then
+	  inst_array[index]="install_ros_ws_package robot_capsule_urdf"
+	  let "index= $index + 1"
+      fi
     inst_array[index]="install_ros_ws_package hrp2_14_description"
     let "index= $index + 1"
   fi
-
 
   inst_array[index]="install_pkg $SRC_DIR/jrl jrl-mathtools ${JRL_URI}"
   let "index= $index + 1"
@@ -419,10 +430,19 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
+  # In groovy and hydro, use the standalone version of jrl_dynamics_urdf
+  if [ "$ROS_VERSION" == "groovy" ] || [ "$ROS_VERSION" == "hydro" ]; then
+    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf ${LAAS_URI}"
+    let "index= $index + 1"
+  else
+    inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
+    let "index= $index + 1"
+  fi
+
   inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${ELIE_URI} topic/eigen"
   let "index= $index + 1"
 
-  inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
+  inst_array[index]="install_ros_ws_package dynamic_graph_bridge_msgs"
   let "index= $index + 1"
 
   inst_array[index]="install_ros_ws_package dynamic_graph_bridge topic/eigen"
@@ -448,7 +468,7 @@ create_local_db()
   fi
 
   if [ "${PRIVATE_URI}" != "" ] || [ "${IDH_PRIVATE_URI}" != "" ]; then
-    if [ "$GRX_FOUND" == "openhrp-3.0.7" ]; then
+    if ! [ "$GRX_3_0_FOUND" == "" ]; then
 
       inst_array[index]="install_ros_ws_package openhrp_bridge"
       let "index= $index + 1"
@@ -460,7 +480,7 @@ create_local_db()
       let "index= $index + 1"
     fi
 
-    if [ "$GRX_FOUND" == "openhrp-3.1.0" ]; then
+    if ! [ "$GRX_3_1_FOUND" == "" ]; then
       inst_array[index]="install_pkg $SRC_DIR/sot sot-hrprtc-hrp2 ${STACK_OF_TASKS_URI}"
       let "index= $index + 1"
     fi
@@ -482,7 +502,7 @@ display_list_instructions()
   done
 }
 
-detect_grx $ARG_DETECT_GRX
+detect_grx
 create_local_db
 
 if (( DISPLAY_LIST_INSTRUCTIONS > 0 )); then
@@ -550,8 +570,12 @@ compare_versions ()
 
 install_apt_dependencies()
 {
-    ${SUDO} ${APT_GET_UPDATE}
-    ${SUDO} ${APT_GET_INSTALL} \
+	if [ $UPDATE_PACKAGE -eq 0 ]; then
+	  return
+	fi
+
+	${SUDO} ${APT_GET_UPDATE}
+	${SUDO} ${APT_GET_INSTALL} \
 	build-essential \
 	cmake pkg-config git \
 	doxygen doxygen-latex \
@@ -561,10 +585,17 @@ install_apt_dependencies()
 	liblapack-dev libblas-dev gfortran \
 	python-dev python-sphinx python-numpy \
 	omniidl omniidl-python libomniorb4-dev
+	if ! [ $? -eq 0 ];  then
+		exit -1
+	fi
 }
 
 install_git()
 {
+    if [ $UPDATE_PACKAGE -eq 0 ]; then
+        return
+    fi
+
     #checking whether git is already installed.
     ${GIT} --version &> /dev/null
     if [ $? -eq 0 ];  then
@@ -598,6 +629,10 @@ install_git()
 
 install_doxygen()
 {
+    if [ $UPDATE_PACKAGE -eq 0 ]; then
+        return
+    fi
+
     #checking whether doxygen is already installed.
     ${DOXYGEN} --version &> /dev/null
     if [ $? -eq 0 ];  then
@@ -648,16 +683,16 @@ update_pkg()
     if ! test x"$4" = x; then
        if ${GIT} branch | grep $4 ; then
           ${GIT} checkout $4
-          ${GIT} pull
+          ${GIT} pull ${GIT_OPTS}
        else
           ${GIT} checkout -b $4 origin/$4
        fi
     else
-      ${GIT} pull
+      ${GIT} pull ${GIT_OPTS}
     fi
 
     # Configure the repository
-    ${GIT} submodule init && ${GIT} submodule update
+    ${GIT} submodule ${GIT_OPTS} init && ${GIT} submodule ${GIT_OPTS} update
 
     cd $OLD_PWD
 }
@@ -671,6 +706,11 @@ compile_pkg()
     fi
 
     cd $2
+
+    if [ $LOG_PACKAGE -eq 1 ]; then
+        ${GIT} log -n 1 --pretty=oneline
+        return
+    fi
 
     # Choose the build type
     if ! test x"$5" = x; then
@@ -690,14 +730,12 @@ compile_pkg()
 	-DCMAKE_BUILD_TYPE=$local_build_type \
 	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type=\"${LDFLAGS}\" \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-	-DSMALLMATRIX=jrl-mathtools -DROBOT=${ROBOT} \
 	-DCXX_DISABLE_WERROR=1 \
     	-DCMAKE_CXX_FLAGS=\"$local_cflags\" ..
     ${CMAKE} \
 	-DCMAKE_BUILD_TYPE=$local_build_type \
 	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type="${LDFLAGS}" \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-	-DSMALLMATRIX=jrl-mathtools -DROBOT=${ROBOT} \
 	-DCXX_DISABLE_WERROR=1 \
 	-DCMAKE_CXX_FLAGS="$local_cflags" ..
 
@@ -724,7 +762,7 @@ install_python_pkg()
     cd "$1"
     if test -d "$2"; then
 	cd "$2"
-	${GIT} pull
+	${GIT} pull ${GIT_OPTS}
     else
 	${GIT} clone ${GIT_CLONE_OPTS} "$3/$2"
 	cd "$2"
@@ -736,102 +774,151 @@ install_python_pkg()
 	   ${GIT} checkout -b "$4" "origin/$4"
        fi
     fi
-    ${GIT} submodule init && ${GIT} submodule update
+    ${GIT} submodule ${GIT_OPTS} init && ${GIT} submodule ${GIT_OPTS} update
     python setup.py install --prefix=${INSTALL_DIR}
 }
 
 install_ros_legacy()
 {
+    if [ $UPDATE_PACKAGE -eq 0 ]; then
+        return
+    fi
+
+    python_version=`python --version 2>&1 | awk '{print $2}'`
+    comp=`compare_versions "$python_version" "2.7"`
+
     ${SUDO} sh -c 'echo "deb http://packages.ros.org/ros/ubuntu '$DISTRIB_CODENAME' main" > /etc/apt/sources.list.d/ros-latest.list'
     ${SUDO} chmod 644 /etc/apt/sources.list.d/ros-latest.list
     wget http://packages.ros.org/ros.key -O - | ${SUDO} apt-key add -
     ${SUDO} ${APT_GET_UPDATE}
     ${SUDO} ${APT_GET_INSTALL} python-setuptools python-pip
-    ${SUDO} ${APT_GET_INSTALL} python-rosdep python-rosinstall python-rosinstall-generator python-wstool
+    ${SUDO} ${APT_GET_INSTALL} python-rosdep python-rosinstall python-rosinstall-generator
+    if [ $comp -ge 0 ]; then
+        ${SUDO} ${APT_GET_INSTALL} python-wstool
+    fi
     ${SUDO} rosdep init || true 2> /dev/null > /dev/null # Will fail if rosdep init has been already run.
     rosdep update
 
     ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-desktop-full
     ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-pr2-mechanism      # for realtime_tools
 
+    if [ "$ROS_VERSION" == "fuerte" ] || [ "$ROS_VERSION" == "electric" ]; then
+        ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-robot-model-py      # for parser urdf model in python   
+    fi 
+
     if [ "$ROS_VERSION" == "fuerte" ]; then
       ${SUDO} ${APT_GET_INSTALL} ros-fuerte-robot-model
-      ${SUDO} ${APT_GET_INSTALL} ros-fuerte-pr2-mechanism
     fi
+
+
+    if [ "$ROS_VERSION" == "groovy" ]; then
+      ${SUDO} ${APT_GET_INSTALL} ros-groovy-control-msgs # for sot_pr2
+    fi
+
+    if [ "$ROS_VERSION" == "hydro" ]; then
+      ${SUDO} ${APT_GET_INSTALL} ros-hydro-robot-state-publisher
+      ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-cmake-modules
+      ${SUDO} ${APT_GET_INSTALL} ros-hydro-urdfdom-py    # for xml_reflection
+    fi
+
+    # install bullet (requires ros ppa)
+    ${SUDO} ${APT_GET_INSTALL} 	libbullet-dev
 }
 
 
 
 
 # create a config file to load all env parameters
-install_config()
+install_config_internal()
 {
     # get python site packages path
     PYTHON_SITELIB=`python -c "import sys, os; print os.sep.join(['lib', 'python' + sys.version[:3], 'site-packages'])"`
-
-    # get dpkg version
-    dpkg_version=`dpkg-architecture --version | head -n 1 | awk '{print $4}'`
-    comp=`compare_versions "$dpkg_version" "1.16.0"`
-    if [[ $comp -ge 0 ]];  then
-      arch_path=`dpkg-architecture -qDEB_HOST_MULTIARCH`
-    fi;
+    # get python dist packages path
+    PYTHON_DISTLIB=`python -c "import sys, os; print os.sep.join(['lib', 'python' + sys.version[:3], 'dist-packages'])"`
 
     # load ros info
     source $SOT_ROOT_DIR/setup.bash
 
     # create the file
-    CONFIG_FILE=config.sh
-    echo "#!/bin/sh"                                >  $CONFIG_FILE
-    echo "source /opt/ros/$ROS_DISTRO/setup.bash"   >> $CONFIG_FILE
-    echo "ROS_WS_DIR=\$HOME/devel/$ROS_DEVEL_NAME"  >> $CONFIG_FILE
-    echo "source \$ROS_WS_DIR/setup.bash"           >> $CONFIG_FILE
-    echo "ROS_WS_DIR=\$HOME/devel/$ROS_DEVEL_NAME"  >> $CONFIG_FILE
+    CONFIG_FILE=$1
+
     echo "ROS_INSTALL_DIR=$INSTALL_DIR"             >> $CONFIG_FILE
-    echo "export ROBOT=\"$ROBOT\""                  >> $CONFIG_FILE
-    echo "export ROS_ROOT=/opt/ros/$ROS_DISTRO"     >> $CONFIG_FILE
-    echo "export PATH=\$ROS_ROOT/bin:\$PATH"        >> $CONFIG_FILE
-    echo "export PYTHONPATH=\$ROS_ROOT/core/roslib/src:\$ROS_INSTALL_DIR/$PYTHON_SITELIB:\$PYTHONPATH" >> $CONFIG_FILE
+    echo "export PATH=/opt/ros/$ROS_DISTRO/bin:\$PATH"        >> $CONFIG_FILE
+    echo "export PYTHONPATH=\$ROS_ROOT/core/roslib/src:\$ROS_INSTALL_DIR/$PYTHON_SITELIB:\$ROS_INSTALL_DIR/$PYTHON_DISTLIB:\$PYTHONPATH" >> $CONFIG_FILE
     echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/opt/grx/lib/pkgconfig"     >> $CONFIG_FILE
-    echo "export ROS_PACKAGE_PATH=\$ROS_WS_DIR:\$ROS_WS_DIR/stacks/hrp2:\$ROS_WS_DIR/stacks/ethzasl_ptam:/opt/ros/${ROS_DISTRO}/stacks:/opt/ros/\${ROS_DISTRO}/stacks/ros_realtime:\$ROS_PACKAGE_PATH" >> $CONFIG_FILE
+    echo "export ROS_PACKAGE_PATH=\$ROS_WS_DIR:/opt/ros/${ROS_VERSION}/stacks:/opt/ros/\${ROS_VERSION}/stacks/ros_realtime:\$ROS_PACKAGE_PATH" >> $CONFIG_FILE
     echo "export LD_LIBRARY_PATH=\$ROS_INSTALL_DIR/lib/plugin:\$LD_LIBRARY_PATH" >> $CONFIG_FILE
     echo "export LD_LIBRARY_PATH=\$ROS_INSTALL_DIR/lib:\$LD_LIBRARY_PATH" >> $CONFIG_FILE
-    if [ $? -eq 0 ];  then
-        echo "export LD_LIBRARY_PATH=\$ROS_INSTALL_DIR/lib/$arch_path/plugin:\$LD_LIBRARY_PATH" >> $CONFIG_FILE
-        echo "export LD_LIBRARY_PATH=\$ROS_INSTALL_DIR/lib/$arch_path:\$LD_LIBRARY_PATH" >> $CONFIG_FILE
-    fi;
     echo "export ROS_MASTER_URI=http://localhost:11311" >> $CONFIG_FILE
+}
+
+
+install_config()
+{
+    # load ros info
+    source $SOT_ROOT_DIR/setup.bash
+
+    # create the file
+    CONFIG_FILE=config_$ROS_DEVEL_NAME.sh
+    echo "#!/bin/sh"   >  $CONFIG_FILE
+    echo ". $SOT_ROOT_DIR/setup.sh" >> $CONFIG_FILE
+    install_config_internal $CONFIG_FILE
+
+    # create the file
+    CONFIG_FILE=config_$ROS_DEVEL_NAME.bash
+    echo "#!/bin/bash"   >  $CONFIG_FILE
+    echo "source $SOT_ROOT_DIR/setup.bash" >> $CONFIG_FILE
+    install_config_internal $CONFIG_FILE
 }
 
 
 # install all ros stack required
 install_ros_ws()
 {
-    # Current groovy and hydro are considered likewise.
-    gh_ros_sub_dir=master
-    if [ "$ROS_VERSION" == "electric" ]; then
-        gh_ros_sub_dir=topic/electric
-    fi
-    if [ "$ROS_VERSION" == "fuerte" ]; then
-        gh_ros_sub_dir=topic/fuerte
+    if [ $UPDATE_PACKAGE -eq 0 ]; then
+        return
     fi
 
-    rosinstall $SOT_ROOT_DIR https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas.rosinstall /opt/ros/$ROS_VERSION
+    # The master branch is for the current ROS development release
+    # (Hydro). All the oldest releases are named by their release name:
+    # fuerte, groovy, etc.
+    gh_ros_sub_dir=master
+    if `! test x$ROS_VERSION == xhydro`; then
+	gh_ros_sub_dir=$ROS_VERSION
+    fi
+    
+    echo "Version to be installed: $ROS_VERSION"
+
+    wget  https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas.rosinstall  --output-document=/tmp/laas.rosinstall
+    cat  /tmp/laas.rosinstall  > /tmp/sot_$ROS_VERSION.rosinstall
+
     if [ "${PRIVATE_URI}" != "" ]; then
-      rosinstall $SOT_ROOT_DIR https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas-private.rosinstall
+      wget  https://raw.github.com/laas/ros/$gh_ros_sub_dir/jrl-umi3218-private.rosinstall   --output-document=/tmp/jrl-umi3218-private.rosinstall
+      cat  /tmp/jrl-umi3218-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
+    fi
+
+    if [ "${TRAC_LAAS_URI}" != "" ]; then
+      wget  https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas-private.rosinstall   --output-document=/tmp/laas-private.rosinstall
+      cat  /tmp/laas-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
     if [ "${IDH_PRIVATE_URI}" != "" ]; then
       echo -e "- git:\n    uri: git@idh.lirmm.fr:mcp/ros/hrp4/hrp4_urdf.git\n" \
            "   local-name: stacks/hrp4\n    version: "${ROS_VERSION} > /tmp/idh-private.rosinstall
-      rosinstall ~/devel/$ROS_DEVEL_NAME  /tmp/idh-private.rosinstall
+      cat  /tmp/idh-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
-    # create the config file.
-    install_config
+    rosinstall $SOT_ROOT_DIR /tmp/sot_$ROS_VERSION.rosinstall /opt/ros/$ROS_VERSION
 }
 
 install_ros_ws_package()
 {
+    if [ $LOG_PACKAGE -eq 1 ]; then
+        roscd $1
+        ${GIT} log -n 1 --pretty=oneline
+        return
+    fi
+
     if [ $COMPILE_PACKAGE -eq 0 ]; then
         return
     fi
@@ -863,20 +950,32 @@ install_ros_ws_package()
 	-DCMAKE_BUILD_TYPE=$local_build_type \
 	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type=\"${LDFLAGS}\" \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-	-DSMALLMATRIX=jrl-mathtools -DROBOT=${ROBOT} \
     	-DCMAKE_CXX_FLAGS=\"$local_cflags\" ..
     ${CMAKE} \
 	-DCMAKE_BUILD_TYPE=$local_build_type \
 	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type="${LDFLAGS}" \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-	-DSMALLMATRIX=jrl-mathtools -DROBOT=${ROBOT} \
 	-DCMAKE_CXX_FLAGS="$local_cflags" ..
     ${MAKE} ${MAKE_OPTS}
+    
+    # for groovy
+    if [ "$ROS_VERSION" == "groovy" ]; then
+        if [ "$1" == "urdf_parser_py" ] || [ "$1" == "robot_capsule_urdf" ] || [ "$1" == "xml_reflection" ]; then
+            ${MAKE} install
+        fi
+    fi
 
-	if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ]; then
-  	  ${MAKE} install
-	fi
+    # for hydro
+    if [ "$ROS_VERSION" == "hydro" ]; then
+        if [ "$1" == "robot_capsule_urdf" ]; then
+            ${MAKE} install
+        fi
+    fi
 
+    # for all distribution
+    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
+        ${MAKE} install
+    fi
 }
 
 update_ros_setup()
@@ -896,22 +995,11 @@ update_ros_setup()
 
 
 # Setup environment variables.
-if [ "$GRX_FOUND" == "openhrp-3.1.0" ]; then
+if ! [ "$GRX_3_1_FOUND" == "" ]; then
   export PKG_CONFIG_PATH="/opt/grx/lib/pkgconfig/":$PKG_CONFIG_PATH
 fi
 
 export PKG_CONFIG_PATH="${INSTALL_DIR}/lib/pkgconfig":$PKG_CONFIG_PATH
-
-# check the multiarch extension, only available for dpkg-architecture > 1.16.0
-dpkg_version=`dpkg-architecture --version | head -n 1 | awk '{print $4}'`
-comp=`compare_versions "$dpkg_version" "1.16.0"`
-if [[ $comp -ge 0 ]];  then
-  arch_path=`dpkg-architecture -qDEB_HOST_MULTIARCH`
-  if [ $? -eq 0 ];  then
-    export PKG_CONFIG_PATH="${INSTALL_DIR}/lib/$arch_path/pkgconfig":$PKG_CONFIG_PATH
-  fi;
-fi;
-
 
 run_instructions()
 {
