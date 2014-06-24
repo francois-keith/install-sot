@@ -9,3 +9,6 @@ git_clone="git clone --quiet --recursive"
 
 # Reduce the output of make
 MAKE_OPTS=-k\ -s $root_dir/scripts/install_sot.sh -r hydro ros 0
+
+#Display the log of each package
+$root_dir/scripts/install_sot.sh -o -r hydro ros 0
