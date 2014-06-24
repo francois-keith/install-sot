@@ -10,7 +10,11 @@ notifications:
 branches:
   only:
   - master
+  - topic/eigen
 language: cpp
 matrix:
   allow_failures:
   - compiler: clang
+os:
+  - linux
+  - osx
