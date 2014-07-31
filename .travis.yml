@@ -10,6 +10,8 @@ notifications:
 branches:
   only:
   - master
+  - travis
+  - catkin
 language: cpp
 matrix:
   allow_failures:
