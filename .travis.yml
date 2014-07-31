@@ -6,7 +6,7 @@ compiler:
 - gcc
 notifications:
   email:
-  - hpp-source@laas.fr
+  - francois.keith@gmail.com
 branches:
   only:
   - master
