@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Install git 1.7.4.1
+#
+install_git()
+{
+    if [ $UPDATE_PACKAGE -eq 0 ]; then
+        return
+    fi
+
+    #checking whether git is already installed.
+    ${GIT} --version &> /dev/null
+    if [ $? -eq 0 ];  then
+      res=`${GIT} --version | awk ' { print $3 }'`
+      comp=`compare_versions "$res" "1.7.4.1"`
+      if [[ $comp -ge 0 ]]; then
+        # 'Git already installed'
+        return
+      else
+        echo 'Git installed but with a deprecated version. Updating.'
+      fi
+    fi
+
+    #install git 1.7.4.1
+    cd /tmp
+    rm -f git-1.7.4.1.tar.bz2
+    wget http://pkgs.fedoraproject.org/repo/pkgs/git/git-1.7.4.1.tar.bz2/76898de4566d11c0d0eec7e99edc2b5c/git-1.7.4.1.tar.bz2
+    mkdir -p $SRC_DIR/oss/
+    mv git-1.7.4.1.tar.bz2 $SRC_DIR/oss/
+    cd $SRC_DIR/oss
+    tar xjvf git-1.7.4.1.tar.bz2
+    cd git-1.7.4.1
+    ./configure --prefix=${INSTALL_DIR}
+    ${MAKE} ${MAKE_OPTS}
+    ${MAKE} ${MAKE_OPTS} install
+
+    echo 'git installation is finished.'
+    echo ' Please do not forget to update the value of the variable GIT'
+    echo ' in install_sot.sh'
+}
+

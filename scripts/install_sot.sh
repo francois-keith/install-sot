@@ -66,70 +66,9 @@ APT_GET_INSTALL="$apt_pref -y $QUIET install"
 APT_GET_UPDATE="$apt_pref -y  $QUIET update"
 
 
-  # ---------------- #
-  # Helper functions #
-  # ---------------- #
-
-set_colors()
-{
-  red='[0;31m';    lred='[1;31m'
-  green='[0;32m';  lgreen='[1;32m'
-  yellow='[0;33m'; lyellow='[1;33m'
-  blue='[0;34m';   lblue='[1;34m'
-  purple='[0;35m'; lpurple='[1;35m'
-  cyan='[0;36m';   lcyan='[1;36m'
-  grey='[0;37m';   lgrey='[1;37m'
-  white='[0;38m';  lwhite='[1;38m'
-  std='[m'
-}
-
-set_nocolors()
-{
-  red=;    lred=
-  green=;  lgreen=
-  yellow=; lyellow=
-  blue=;   lblue=
-  purple=; lpurple=
-  cyan=;   lcyan=
-  grey=;   lgrey=
-  white=;  lwhite=
-  std=
-}
-
-# abort err-msg
-abort()
-{
-  echo "install_sot.sh: ${lred}abort${std}: $@" \
-  | sed '1!s/^[ 	]*/             /' >&2
-  exit 1
-}
-
-# warn msg
-warn()
-{
-  echo "install_sot.sh: ${lred}warning${std}: $@" \
-  | sed '1!s/^[ 	]*/             /' >&2
-}
-
-# notice msg
-notice()
-{
-  echo "install_sot.sh: ${lyellow}notice${std}: $@" \
-  | sed '1!s/^[ 	]*/              /' >&2
-}
-
-# yesno question
-yesno()
-{
-  printf "$@ [y/N] "
-  read answer || return 1
-  case $answer in
-    y* | Y*) return 0;;
-    *)       return 1;;
-  esac
-  return 42 # should never happen...
-}
-
+#Load helper functions
+dependencies_path=`dirname $0`/dependencies
+. $dependencies_path/helper_functions
 
   # -------------------- #
   # Actions definitions. #
@@ -544,27 +483,8 @@ mkdir -p                \
     $SRC_DIR/jrl        \
     $SRC_DIR/planning   \
     $SRC_DIR/robots     \
-    $SRC_DIR/sot
-
-# compare two versions. Taks two arguments: a and b
-# return -1 if a<b, 0 if a=b, 1 if a>b
-# source: http://stackoverflow.com/questions/3511006/how-to-compare-versions-of-some-products-in-unix-shell
-compare_versions ()
-{
-  typeset    IFS='.'
-  typeset -a v1=( $1 )
-  typeset -a v2=( $2 )
-  typeset    n diff
-
-  for (( n=0; n<4; n+=1 )); do
-    diff=$((v1[n]-v2[n]))
-    if [ $diff -ne 0 ] ; then
-      [ $diff -le 0 ] && echo '-1' || echo '1'
-      return
-    fi
-  done
-  echo '0'
-}
+    $SRC_DIR/sot        \
+    $SRC_DIR/tcp
 
 install_apt_dependencies()
 {
@@ -586,80 +506,6 @@ install_apt_dependencies()
 	if ! [ $? -eq 0 ];  then
 		exit -1
 	fi
-}
-
-install_git()
-{
-    if [ $UPDATE_PACKAGE -eq 0 ]; then
-        return
-    fi
-
-    #checking whether git is already installed.
-    ${GIT} --version &> /dev/null
-    if [ $? -eq 0 ];  then
-      res=`${GIT} --version | awk ' { print $3 }'`
-      comp=`compare_versions "$res" "1.7.4.1"`
-      if [[ $comp -ge 0 ]]; then
-        # 'Git already installed'
-        return
-      else
-        echo 'Git installed but with a deprecated version. Updating.'
-      fi
-    fi
-
-    #install git 1.7.4.1
-    cd /tmp
-    rm -f git-1.7.4.1.tar.bz2
-    wget http://pkgs.fedoraproject.org/repo/pkgs/git/git-1.7.4.1.tar.bz2/76898de4566d11c0d0eec7e99edc2b5c/git-1.7.4.1.tar.bz2
-    mkdir -p $SRC_DIR/oss/
-    mv git-1.7.4.1.tar.bz2 $SRC_DIR/oss/
-    cd $SRC_DIR/oss
-    tar xjvf git-1.7.4.1.tar.bz2
-    cd git-1.7.4.1
-    ./configure --prefix=${INSTALL_DIR}
-    ${MAKE} ${MAKE_OPTS}
-    ${MAKE} ${MAKE_OPTS} install
-
-    echo 'git installation is finished.'
-    echo ' Please do not forget to update the value of the variable GIT'
-    echo ' in install_sot.sh'
-}
-
-install_doxygen()
-{
-    if [ $UPDATE_PACKAGE -eq 0 ]; then
-        return
-    fi
-
-    #checking whether doxygen is already installed.
-    ${DOXYGEN} --version &> /dev/null
-    if [ $? -eq 0 ];  then
-      res=`${DOXYGEN} --version | awk ' { print $1 }'`
-      comp=`compare_versions "$res" "1.7.3"`
-      if [[ $comp -ge 0 ]]; then
-        # 'doxygen already installed'
-        return
-      else
-        echo 'doxygen installed but with a deprecated version. Updating.'
-      fi
-    fi
-
-    # get the dependencies.
-    ${SUDO} ${APT_GET_INSTALL} flex bison
-    cd /tmp
-    rm -f doxygen-1.7.3.src.tar.gz
-    wget http://ftp.stack.nl/pub/users/dimitri/doxygen-1.7.3.src.tar.gz
-    mv doxygen-1.7.3.src.tar.gz $SRC_DIR/oss/
-    cd $SRC_DIR/oss
-    tar xzvf doxygen-1.7.3.src.tar.gz
-    cd doxygen-1.7.3
-    ./configure --prefix ${INSTALL_DIR}
-    ${MAKE} ${MAKE_OPTS}
-    ${MAKE} ${MAKE_OPTS} install
-
-    echo 'doxygen installation is finished.'
-    echo ' Please do not forget to update the value of the variable DOXYGEN'
-    echo ' in install_sot.sh'
 }
 
 update_pkg()
@@ -1007,6 +853,11 @@ if ! [ "$GRX_3_1_FOUND" == "" ]; then
 fi
 
 export PKG_CONFIG_PATH="${INSTALL_DIR}/lib/pkgconfig":$PKG_CONFIG_PATH
+export PKG_CONFIG_PATH=${SOT_ROOT_DIR}/devel/lib/pkgconfig:$PKG_CONFIG_PATH
+
+# load the installations scripts for git and doxygen
+. $dependencies_path/git
+. $dependencies_path/doxygen
 
 run_instructions()
 {

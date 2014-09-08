@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Install doxygen
+#
+install_doxygen()
+{
+    if [ $UPDATE_PACKAGE -eq 0 ]; then
+        return
+    fi
+
+    #checking whether doxygen is already installed.
+    ${DOXYGEN} --version &> /dev/null
+    if [ $? -eq 0 ];  then
+      res=`${DOXYGEN} --version | awk ' { print $1 }'`
+      comp=`compare_versions "$res" "1.7.3"`
+      if [[ $comp -ge 0 ]]; then
+        # 'doxygen already installed'
+        return
+      else
+        echo 'doxygen installed but with a deprecated version. Updating.'
+      fi
+    fi
+
+    # get the dependencies.
+    ${SUDO} ${APT_GET_INSTALL} flex bison
+    cd /tmp
+    rm -f doxygen-1.7.3.src.tar.gz
+    wget http://ftp.stack.nl/pub/users/dimitri/doxygen-1.7.3.src.tar.gz
+    mv doxygen-1.7.3.src.tar.gz $SRC_DIR/oss/
+    cd $SRC_DIR/oss
+    tar xzvf doxygen-1.7.3.src.tar.gz
+    cd doxygen-1.7.3
+    ./configure --prefix ${INSTALL_DIR}
+    ${MAKE} ${MAKE_OPTS}
+    ${MAKE} ${MAKE_OPTS} install
+
+    echo 'doxygen installation is finished.'
+    echo ' Please do not forget to update the value of the variable DOXYGEN'
+    echo ' in install_sot.sh'
+}
+
