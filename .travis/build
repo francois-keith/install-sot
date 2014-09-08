@@ -7,6 +7,8 @@ root_dir=`pwd`
 # Shortcuts.
 git_clone="git clone --quiet --recursive"
 
+export ROS_PARALLEL_JOBS='-j 1'
+
 # Reduce the output of make
 MAKE_OPTS=-k\ -s $root_dir/scripts/install_sot.sh -r hydro ros 0
 

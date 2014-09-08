@@ -2,14 +2,16 @@ script: ./.travis/build
 before_install:
 - git submodule update --init --recursive
 compiler:
-- clang
 - gcc
 notifications:
   email:
-  - hpp-source@laas.fr
+  - francois.keith@gmail.com
 branches:
   only:
   - master
+  - travis
+  - catkin
+  - catkin_robohow_2
 language: cpp
 matrix:
   allow_failures:
