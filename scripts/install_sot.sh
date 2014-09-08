@@ -333,7 +333,7 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI} f7271a3f2 "
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic git://github.com/francois-keith f7271a3f2 "
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot soth ${STACK_OF_TASKS_URI}"
