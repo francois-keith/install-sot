@@ -1,0 +1,35 @@
+- git: 
+    uri: git@bitbucket.org:francois-keith/expressiongraph
+    local-name: stacks/itasc/expressiongraph
+    version: catkin
+
+- git: 
+    uri: https://github.com/francois-keith/robohow_common_msgs
+    local-name: stacks/robohow_common_msgs
+    version: catkin
+
+- git: 
+    uri: https://github.com/francois-keith/robohow_common_tools
+    local-name: stacks/robohow_common_tools
+    version: catkin
+
+- git:
+    uri: https://github.com/francois-keith/robohow_sot
+    local-name: stacks/robohow_sot
+    version: catkin
+
+- git:
+    uri: https://github.com/francois-keith/robohow_sot_demo
+    local-name: stacks/robohow_sot_demo
+    version: master
+
+- git:
+    uri: https://github.com/francois-keith/sot_controller_wrapper
+    local-name: stacks/sot_controller_wrapper
+    version: master
+
+- git:
+   uri: git@github.com:RoboHow/pr2_sot_integration
+   local-name: stacks/pr2_sot_integration
+   version: catkin
+
