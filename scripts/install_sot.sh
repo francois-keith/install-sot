@@ -661,38 +661,36 @@ install_ros_legacy()
     ${SUDO} chmod 644 /etc/apt/sources.list.d/ros-latest.list
     wget http://packages.ros.org/ros.key -O - | ${SUDO} apt-key add -
     ${SUDO} ${APT_GET_UPDATE}
-    ${SUDO} ${APT_GET_INSTALL} python-setuptools python-pip
-    ${SUDO} ${APT_GET_INSTALL} python-rosdep python-rosinstall python-rosinstall-generator
+
+    deps=(python-setuptools python-pip python-rosdep python-rosinstall python-rosinstall-generator)
     if [ $comp -ge 0 ]; then
-        ${SUDO} ${APT_GET_INSTALL} python-wstool
-    fi
-    ${SUDO} rosdep init || true 2> /dev/null > /dev/null # Will fail if rosdep init has been already run.
-    rosdep update
-
-    ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-desktop-full
-    ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-pr2-mechanism      # for realtime_tools
-
-    if [ "$ROS_VERSION" == "fuerte" ] || [ "$ROS_VERSION" == "electric" ]; then
-        ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-robot-model-py      # for parser urdf model in python   
-    fi 
-
-    if [ "$ROS_VERSION" == "fuerte" ]; then
-      ${SUDO} ${APT_GET_INSTALL} ros-fuerte-robot-model
+        deps+=(python-wstool)
     fi
 
+    deps+=(ros-$ROS_VERSION-desktop ros-$ROS_VERSION-pr2-mechanism)
+    deps+=(ros-$ROS_VERSION-rosbridge-suite) # for sot_sandbox display
 
     if [ "$ROS_VERSION" == "groovy" ]; then
-      ${SUDO} ${APT_GET_INSTALL} ros-groovy-control-msgs # for sot_pr2
+      deps+=(ros-groovy-control-msgs) # for sot_pr2
     fi
 
     if [ "$ROS_VERSION" == "hydro" ]; then
-      ${SUDO} ${APT_GET_INSTALL} ros-hydro-robot-state-publisher
-      ${SUDO} ${APT_GET_INSTALL} ros-$ROS_VERSION-cmake-modules
-      ${SUDO} ${APT_GET_INSTALL} ros-hydro-urdfdom-py    # for xml_reflection
+      deps+=(ros-hydro-ros-control ros-hydro-robot-state-publisher)
+      deps+=(ros-hydro-cmake-modules ros-hydro-urdfdom-py)
+      deps+=(ros-hydro-freenect-launch) # for slam
+      # for pr2
+      deps+=(ros-hydro-pr2-gazebo-plugins ros-hydro-pr2-gazebo)
+      deps+=(ros-hydro-hokuyo-node        ros-hydro-pr2-controllers-msgs)
+    else
+      deps+=(ros-$ROS_VERSION-pr2-control)      # for realtime_tools
     fi
 
     # install bullet (requires ros ppa)
-    ${SUDO} ${APT_GET_INSTALL} 	libbullet-dev
+    deps+=(libbullet-dev)
+    ${SUDO} ${APT_GET_INSTALL}  ${deps[@]}
+
+    ${SUDO} rosdep init || true 2> /dev/null > /dev/null # Will fail if rosdep init has been already run.
+    rosdep update
 }
 
 
