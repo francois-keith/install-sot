@@ -679,8 +679,8 @@ install_ros_legacy()
       deps+=(ros-hydro-cmake-modules ros-hydro-urdfdom-py)
       deps+=(ros-hydro-freenect-launch) # for slam
       # for pr2
-      deps+=(ros-hydro-pr2-gazebo-plugins ros-hydro-pr2-gazebo)
-      deps+=(ros-hydro-hokuyo-node        ros-hydro-pr2-controllers-msgs)
+      #deps+=(ros-hydro-pr2-gazebo-plugins ros-hydro-pr2-gazebo)
+      #deps+=(ros-hydro-hokuyo-node        ros-hydro-pr2-controllers-msgs)
     else
       deps+=(ros-$ROS_VERSION-pr2-control)      # for realtime_tools
     fi
