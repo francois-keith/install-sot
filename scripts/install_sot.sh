@@ -220,7 +220,7 @@ INSTALL_DIR=$SOT_ROOT_DIR/install
 # PRIVATE_URI=git@github.com:jrl-umi3218
 
 # Uncomment only if you have an account on this server.
-# IDH_PRIVATE_URI=git@idh.lirmm.fr:sot
+# IDH_PRIVATE_URI=git@idh.lirmm.fr
 
 # Uncomment only if you have an account on this server.
 # TRAC_LAAS_URI=trac.laas.fr
@@ -245,8 +245,6 @@ else
     LAAS_URI=git@github.com:laas
     STACK_OF_TASKS_URI=git@github.com:stack-of-tasks
 fi
-
-INRIA_URI=https://gforge.inria.fr/git/romeo-sot
 
 # HTTP protocol can also be used:
 #JRL_URI=https://${LAAS_USER_ACCOUNT}@github.com/jrl-umi3218
@@ -280,28 +278,8 @@ create_local_db()
   inst_array[index]="install_config"
   let "index= $index +1"
 
-  inst_array[index]="install_pkg $SRC_DIR/robots romeo-sot.git ${INRIA_URI}"
-  let "index= $index + 1"
-
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
-    inst_array[index]="install_pkg $SRC_DIR/robots hrp4_sot ${IDH_PRIVATE_URI}"
-    let "index= $index + 1"
-  fi
-
-  if [ "${PRIVATE_URI}" != "" ]; then
-      if [ "$ROS_VERSION" == "groovy" ]; then
-	  inst_array[index]="install_ros_ws_package urdf_parser_py"
-	  let "index= $index + 1"
-	  inst_array[index]="install_ros_ws_package robot_capsule_urdf"
-	  let "index= $index + 1"
-	  inst_array[index]="install_ros_ws_package xml_reflection"
-	  let "index= $index + 1"
-      fi
-      if [ "$ROS_VERSION" == "hydro" ]; then
-	  inst_array[index]="install_ros_ws_package robot_capsule_urdf"
-	  let "index= $index + 1"
-      fi
-    inst_array[index]="install_ros_ws_package hrp2_14_description"
+    inst_array[index]="install_pkg $SRC_DIR/robots hrp4_sot ${IDH_PRIVATE_URI}:sot"
     let "index= $index + 1"
   fi
 
@@ -334,10 +312,10 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/jrl jrl-walkgen ${JRL_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph git://github.com/francois-keith"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot dynamic-graph-python git://github.com/francois-keith with_mutex"
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/laas hpp-util ${LAAS_URI}"
@@ -355,26 +333,20 @@ create_local_db()
   inst_array[index]="install_pkg $SRC_DIR/sot sot-tools ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dynamic ${STACK_OF_TASKS_URI} f7271a3f2 "
   let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot soth ${STACK_OF_TASKS_URI}"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-dyninv git://github.com/francois-keith "
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-application ${STACK_OF_TASKS_URI} master"
   let "index= $index + 1"
 
-  # In fuerte and electric, use the ros version of jrl_dynamics_urdf 
-  if [ "$ROS_VERSION" == "fuerte" ] || [ "$ROS_VERSION" == "electric" ]; then
-    inst_array[index]="install_ros_ws_package jrl_dynamics_urdf"
-    let "index= $index + 1"
-  else # otherwise, use the standalone version of jrl_dynamics_urdf
-    inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf ${LAAS_URI}"
-    let "index= $index + 1"
-  fi
+  inst_array[index]="install_pkg $SRC_DIR/jrl jrl_dynamics_urdf git://github.com/francois-keith topic/fixed_joints"
+  let "index= $index + 1"
 
   inst_array[index]="install_pkg $SRC_DIR/sot sot-pattern-generator ${STACK_OF_TASKS_URI} master"
   let "index= $index + 1"
@@ -385,17 +357,52 @@ create_local_db()
   inst_array[index]="install_ros_ws_package dynamic_graph_bridge"
   let "index= $index + 1"
 
+  if [ "${IDH_PRIVATE_URI}" != "" ]; then
+    inst_array[index]="install_ros_ws_package hrp4_description"
+    let "index= $index + 1"
+
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp4 ${IDH_PRIVATE_URI}:sot catkin"
+    let "index= $index + 1"
+  fi
+
+  inst_array[index]="install_ros_ws_package dynamic_graph_actionlib"
+  let "index= $index + 1"
+
   inst_array[index]="install_ros_ws_package romeo_description"
   let "index= $index + 1"
 
-  inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo.git ${STACK_OF_TASKS_URI}"
+  inst_array[index]="install_pkg $SRC_DIR/sot sot-romeo git://github.com/francois-keith catkin"
   let "index= $index + 1"
+
+  inst_array[index]="install_ros_ws_package sot_pr2"
+  let "index= $index + 1"
+
+  if [ "${PRIVATE_URI}" != "" ]; then
+      if [ "$ROS_VERSION" == "groovy" ]; then
+	  inst_array[index]="install_ros_ws_package urdf_parser_py"
+	  let "index= $index + 1"
+	  inst_array[index]="install_ros_ws_package robot_capsule_urdf"
+	  let "index= $index + 1"
+	  inst_array[index]="install_ros_ws_package xml_reflection"
+	  let "index= $index + 1"
+      fi
+      if [ "$ROS_VERSION" == "hydro" ]; then
+	  inst_array[index]="install_ros_ws_package robot_capsule_urdf"
+	  let "index= $index + 1"
+      fi
+    inst_array[index]="install_ros_ws_package hrp2_14_description"
+    let "index= $index + 1"
+
+    inst_array[index]="install_ros_ws_package hrp2_10_description"
+    let "index= $index + 1"
+  fi
+
 
   if [ "${IDH_PRIVATE_URI}" != "" ]; then
     inst_array[index]="install_ros_ws_package hrp4_description"
     let "index= $index + 1"
 
-    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp4 ${IDH_PRIVATE_URI}"
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-hrp4 ${IDH_PRIVATE_URI}:sot"
     let "index= $index + 1"
   fi
 
@@ -421,8 +428,16 @@ create_local_db()
       inst_array[index]="install_pkg $SRC_DIR/sot sot-hrprtc-hrp2 ${STACK_OF_TASKS_URI}"
       let "index= $index + 1"
     fi
-
   fi
+
+
+  if [ "${IDH_PRIVATE_URI}" != "" ]; then
+    inst_array[index]="install_pkg $SRC_DIR/sot sot-hri ${IDH_PRIVATE_URI}:sot topic/v2.5b"
+    let "index= $index + 1"
+  fi
+
+  inst_array[index]="catkin_install"
+  let "index= $index +1"
 
   for ((lindex=0; lindex<${#inst_array[@]} ; lindex++ ))
   do
@@ -561,6 +576,8 @@ compile_pkg()
         return
     fi
 
+    update_ros_setup
+
     # Choose the build type
     if ! test x"$5" = x; then
 	local_build_type=$5
@@ -690,7 +707,7 @@ install_config_internal()
     PYTHON_DISTLIB=`python -c "import sys, os; print os.sep.join(['lib', 'python' + sys.version[:3], 'dist-packages'])"`
 
     # load ros info
-    source $SOT_ROOT_DIR/setup.bash
+    source $SOT_ROOT_DIR/devel/setup.bash
 
     # create the file
     CONFIG_FILE=$1
@@ -699,31 +716,27 @@ install_config_internal()
     echo "export PATH=/opt/ros/$ROS_DISTRO/bin:\$PATH"        >> $CONFIG_FILE
     echo "export PYTHONPATH=\$ROS_ROOT/core/roslib/src:\$ROS_INSTALL_DIR/$PYTHON_SITELIB:\$ROS_INSTALL_DIR/$PYTHON_DISTLIB:\$PYTHONPATH" >> $CONFIG_FILE
     echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/opt/grx/lib/pkgconfig"     >> $CONFIG_FILE
-    echo "export ROS_PACKAGE_PATH=\$ROS_WS_DIR:/opt/ros/${ROS_VERSION}/stacks:/opt/ros/\${ROS_VERSION}/stacks/ros_realtime:\$ROS_PACKAGE_PATH" >> $CONFIG_FILE
     echo "export LD_LIBRARY_PATH=\$ROS_INSTALL_DIR/lib/plugin:\$LD_LIBRARY_PATH" >> $CONFIG_FILE
     echo "export LD_LIBRARY_PATH=\$ROS_INSTALL_DIR/lib:\$LD_LIBRARY_PATH" >> $CONFIG_FILE
-    echo "export ROS_MASTER_URI=http://localhost:11311" >> $CONFIG_FILE
 }
-
 
 install_config()
 {
     # load ros info
-    source $SOT_ROOT_DIR/setup.bash
+    source $SOT_ROOT_DIR/devel/setup.bash
 
     # create the file
-    CONFIG_FILE=config_$ROS_DEVEL_NAME.sh
+    CONFIG_FILE=$SOT_ROOT_DIR/config_$ROS_DEVEL_NAME.sh
     echo "#!/bin/sh"   >  $CONFIG_FILE
-    echo ". $SOT_ROOT_DIR/setup.sh" >> $CONFIG_FILE
+    echo ". $SOT_ROOT_DIR/devel/setup.sh" >> $CONFIG_FILE
     install_config_internal $CONFIG_FILE
 
     # create the file
-    CONFIG_FILE=config_$ROS_DEVEL_NAME.bash
+    CONFIG_FILE=$SOT_ROOT_DIR/config_$ROS_DEVEL_NAME.bash
     echo "#!/bin/bash"   >  $CONFIG_FILE
-    echo "source $SOT_ROOT_DIR/setup.bash" >> $CONFIG_FILE
+    echo "source $SOT_ROOT_DIR/devel/setup.bash" >> $CONFIG_FILE
     install_config_internal $CONFIG_FILE
 }
-
 
 # install all ros stack required
 install_ros_ws()
@@ -742,30 +755,56 @@ install_ros_ws()
     
     echo "Version to be installed: $ROS_VERSION"
 
-    wget  https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas.rosinstall  --output-document=/tmp/laas.rosinstall
+    wget  https://raw.github.com/francois-keith/ros/catkin/laas.rosinstall  --output-document=/tmp/laas.rosinstall
     cat  /tmp/laas.rosinstall  > /tmp/sot_$ROS_VERSION.rosinstall
-
     if [ "${PRIVATE_URI}" != "" ]; then
-      wget  https://raw.github.com/laas/ros/$gh_ros_sub_dir/jrl-umi3218-private.rosinstall   --output-document=/tmp/jrl-umi3218-private.rosinstall
+      wget  https://raw.github.com/francois-keith/ros/$gh_ros_sub_dir/jrl-umi3218-private.rosinstall   --output-document=/tmp/jrl-umi3218-private.rosinstall
       cat  /tmp/jrl-umi3218-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
     if [ "${TRAC_LAAS_URI}" != "" ]; then
-      wget  https://raw.github.com/laas/ros/$gh_ros_sub_dir/laas-private.rosinstall   --output-document=/tmp/laas-private.rosinstall
+      wget  https://raw.github.com/francois-keith/ros/$gh_ros_sub_dir/laas-private.rosinstall   --output-document=/tmp/laas-private.rosinstall
       cat  /tmp/laas-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
     if [ "${IDH_PRIVATE_URI}" != "" ]; then
-      echo -e "- git:\n    uri: git@idh.lirmm.fr:mcp/ros/hrp4/hrp4_urdf.git\n" \
+      echo -e "- git:\n    uri: ${IDH_PRIVATE_URI}:mcp/ros/hrp4/hrp4_urdf.git\n" \
            "   local-name: stacks/hrp4\n    version: "${ROS_VERSION} > /tmp/idh-private.rosinstall
       cat  /tmp/idh-private.rosinstall >> /tmp/sot_$ROS_VERSION.rosinstall
     fi
 
-    rosinstall $SOT_ROOT_DIR /tmp/sot_$ROS_VERSION.rosinstall /opt/ros/$ROS_VERSION
+    cd $SOT_ROOT_DIR/src
+    if ! [ -e CMakeLists.txt ]; then
+      echo "catkin_init_workspace"
+      source /opt/ros/$ROS_VERSION/setup.bash
+      catkin_init_workspace
+      cd ..
+      # First empty compilation. Creates the devel/setup.*sh files
+      catkin_make
+    fi
+
+    # installing the sources
+    cd $SOT_ROOT_DIR
+    if [ -e src/.rosinstall ]; then
+      cd src
+      source $SOT_ROOT_DIR/devel/setup.bash
+      wstool merge /tmp/sot_$ROS_VERSION.rosinstall
+      wstool update
+    else
+      source $SOT_ROOT_DIR/devel/setup.bash
+      wstool init src /tmp/sot_$ROS_VERSION.rosinstall
+    fi
 }
 
 install_ros_ws_package()
 {
+    if [ $COMPILE_PACKAGE -eq 0 ]; then
+        return
+    fi
+
+    update_ros_setup
+
+    # ...
     if [ $LOG_PACKAGE -eq 1 ]; then
         roscd $1
         ${GIT} log -n 1 --pretty=oneline
@@ -778,57 +817,23 @@ install_ros_ws_package()
 
     echo "### Install ros package $1"
     # Go to the rospackage build directory.
-    roscd $1
-    echo "PWD:"$PWD
-    if [ ! -d build ]; then
-      mkdir -p build
-    fi
-    cd build
+    roscd
+    cd ..
+    catkin_make --pkg $1
+}
 
-    # Choose the build type
-    if ! test x"$2" = x; then
-	local_build_type=$2
-	local_cflags=""
-    else
-	local_build_type=${BUILD_TYPE}
-	local_cflags=${CFLAGS}
+catkin_install()
+{
+    if [ $COMPILE_PACKAGE -eq 0 ]; then
+        return
     fi
 
-    # Configure the package
-    if [ $REMOVE_CMAKECACHE -eq 1 ]; then
-        rm -f CMakeCache.txt
-    fi
+    update_ros_setup
 
-    echo ${CMAKE} \
-	-DCMAKE_BUILD_TYPE=$local_build_type \
-	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type=\"${LDFLAGS}\" \
-	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-    	-DCMAKE_CXX_FLAGS=\"$local_cflags\" ..
-    ${CMAKE} \
-	-DCMAKE_BUILD_TYPE=$local_build_type \
-	-DCMAKE_EXE_LINKER_FLAGS_$local_build_type="${LDFLAGS}" \
-	-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-	-DCMAKE_CXX_FLAGS="$local_cflags" ..
-    ${MAKE} ${MAKE_OPTS}
-    
-    # for groovy
-    if [ "$ROS_VERSION" == "groovy" ]; then
-        if [ "$1" == "urdf_parser_py" ] || [ "$1" == "robot_capsule_urdf" ] || [ "$1" == "xml_reflection" ]; then
-            ${MAKE} install
-        fi
-    fi
-
-    # for hydro
-    if [ "$ROS_VERSION" == "hydro" ]; then
-        if [ "$1" == "robot_capsule_urdf" ]; then
-            ${MAKE} install
-        fi
-    fi
-
-    # for all distribution
-    if [ "$1" == "dynamic_graph_bridge" ] || [ "$1" == "openhrp_bridge" ] ; then
-        ${MAKE} install
-    fi
+    # Go to the rospackage build directory.
+    roscd
+    cd ..
+    catkin_make install
 }
 
 update_ros_setup()
@@ -841,8 +846,11 @@ update_ros_setup()
     exit 1
   fi
 
-  if [ -f $SOT_ROOT_DIR/setup.bash ]; then
-    source $SOT_ROOT_DIR/setup.bash
+  if [ -f $SOT_ROOT_DIR/devel/setup.bash ]; then
+    source $SOT_ROOT_DIR/devel/setup.bash
+  else
+    echo "Unable to load ros environment."
+    exit 1
   fi
 }
 
@@ -865,7 +873,7 @@ run_instructions()
   for ((lindex=$install_level; lindex<${#inst_array[@]} ; lindex++ ))
   do
       echo
-      if [ $lindex -ge 4 ]; then
+      if [ $lindex -ge 5 ]; then
         update_ros_setup
       fi
 
