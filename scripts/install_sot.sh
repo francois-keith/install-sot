@@ -549,7 +549,7 @@ update_pkg()
           ${GIT} checkout $4
           ${GIT} pull ${GIT_OPTS}
        else
-          ${GIT} checkout -b $4 origin/$4
+          ${GIT} checkout $4
        fi
     else
       ${GIT} pull ${GIT_OPTS}
